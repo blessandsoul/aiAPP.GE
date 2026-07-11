@@ -1,0 +1,41 @@
+{
+  "_comment": "Brand whitelist for aiapp. The product hue is the brand, not AI slop. Read by .claude/hooks/frontend_design_gate.py via the vendored impeccable detector.",
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "ai-color-palette",
+        "value": "#a3e635",
+        "files": [
+          "src/**"
+        ],
+        "reason": "aiapp brand colour, locked in src/config/site.ts"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "#ecfccb",
+        "files": [
+          "src/**"
+        ],
+        "reason": "aiapp brand colour, locked in src/config/site.ts"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "#a3e635",
+        "files": [
+          "src/**"
+        ],
+        "reason": "aiapp brand colour, locked in src/config/site.ts"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "#bef264",
+        "files": [
+          "src/**"
+        ],
+        "reason": "aiapp brand colour, locked in src/config/site.ts"
+      }
+    ]
+  }
+}
