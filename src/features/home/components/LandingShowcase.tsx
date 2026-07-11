@@ -1,8 +1,10 @@
 'use client';
 
 import { AppEval } from '@/features/showcase/AppEval';
+import { AppTraceReplay } from '@/features/showcase/AppTraceReplay';
 import { AppCost } from '@/features/showcase/AppCost';
 import { AppLadder } from '@/features/showcase/AppLadder';
+import { AppSafeHandoff } from '@/features/showcase/AppSafeHandoff';
 
 /* =========================================================================
    LandingShowcase: the aiAPP product slot.
@@ -28,8 +30,10 @@ export function LandingShowcase() {
   return (
     <div id="showcase" className="landing-showcase">
       <AppEval />
+      <AppTraceReplay />
       <AppCost />
       <AppLadder />
+      <AppSafeHandoff />
     </div>
   );
 }

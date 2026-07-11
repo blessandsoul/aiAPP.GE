@@ -10,7 +10,8 @@
     "indexnow": "node scripts/indexnow-ping.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:showcase": "node --test src/features/showcase/*.test.mjs src/messages/*.test.mjs"
   },
   "dependencies": {
     "@dagrejs/dagre": "^2.0.4",
