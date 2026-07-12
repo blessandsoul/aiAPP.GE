@@ -86,6 +86,14 @@ test('Cost and Ladder remain visible visitor controls with Replay', () => {
   }
 });
 
+test('reduced motion never changes the server and client initial markup', () => {
+  assert.doesNotMatch(
+    sources['AppLadder.tsx'],
+    /initial=\{reduced\s*\?/u,
+    'AppLadder initial markup must not depend on a browser-only media query',
+  );
+});
+
 test('the showcase order explains work, checking, cost, offer, and ownership', () => {
   assert.doesNotMatch(landingShowcaseSource, /eval suite|dev-tool|trace JSON/iu);
   assert.match(
@@ -171,6 +179,20 @@ test('aiNOW owns public commitments and Georgian copy contains no Cyrillic', () 
 
   const georgian = JSON.stringify(locales.ka.product);
   assert.doesNotMatch(georgian, /[\u0400-\u04ff]/u);
+});
+
+test('the contact note is aiNOW-owned and makes no unsupported response-time promise', () => {
+  const timePromises = {
+    en: /business day|within\s+\d+|hours?|minutes?/iu,
+    ka: /სამუშაო დღის|\d+\s*(?:საათ|წუთ)/u,
+    ru: /рабочего дня|в течение\s+\d+|час(?:а|ов)?|минут/u,
+  };
+
+  for (const [locale, messages] of Object.entries(locales)) {
+    const note = messages.product.cta.phoneNote;
+    assert.match(note, /aiNOW/u, `${locale}.cta.phoneNote`);
+    assert.doesNotMatch(note, timePromises[locale], `${locale}.cta.phoneNote`);
+  }
 });
 
 test('the removed ecosystem slogan never returns', () => {

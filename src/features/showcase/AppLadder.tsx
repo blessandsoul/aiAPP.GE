@@ -129,7 +129,7 @@ export function AppLadder() {
 
                       {active && (
                         <motion.span
-                          initial={reduced ? false : { opacity: 0, y: 6 }}
+                          initial={false}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: reduced ? 0 : 0.25 }}
                           className="mt-5 block"
