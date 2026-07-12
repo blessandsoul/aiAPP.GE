@@ -22,6 +22,7 @@ import {
   createTimelinePlayer,
   handoffFrame,
 } from './app-demo-models.mjs';
+import { createVisibilityGate } from './app-demo-visibility.mjs';
 
 const HANDOFF_DURATION_MS = 7_200;
 const HANDOFF_STAGES = [0, ...HANDOFF_ITEMS.map((_, index) => index + 1)];
@@ -45,6 +46,7 @@ export function AppSafeHandoff() {
   const reduced = useReducedMotion();
   const [transferredCount, setTransferredCount] = useState(0);
   const playerRef = useRef<TimelinePlayer | null>(null);
+  const visibilityRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const player = createTimelinePlayer({
@@ -55,9 +57,14 @@ export function AppSafeHandoff() {
     });
 
     playerRef.current = player;
-    player.play();
+    const cleanupVisibility = createVisibilityGate({
+      target: visibilityRef.current,
+      play: player.play,
+      reducedMotion: Boolean(reduced),
+    });
 
     return () => {
+      cleanupVisibility();
       player.cleanup();
       if (playerRef.current === player) playerRef.current = null;
     };
@@ -79,7 +86,10 @@ export function AppSafeHandoff() {
         </p>
       </div>
 
-      <div className="overflow-hidden rounded-3xl bg-[#f7f7f5] shadow-[0_0_0_1px_rgba(0,0,0,0.07)]">
+      <div
+        ref={visibilityRef}
+        className="overflow-hidden rounded-3xl bg-[#f7f7f5] shadow-[0_0_0_1px_rgba(0,0,0,0.07)]"
+      >
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-900/[0.07] px-4 py-4 md:px-7">
           <span className="text-[12px] font-semibold uppercase tracking-wide text-neutral-900/45">
             {t('custody')}

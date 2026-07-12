@@ -21,6 +21,7 @@ import {
   createTimelinePlayer,
   traceFrame,
 } from './app-demo-models.mjs';
+import { createVisibilityGate } from './app-demo-visibility.mjs';
 
 const TRACE_DURATION_MS = 7_200;
 
@@ -44,6 +45,7 @@ export function AppTraceReplay() {
   const reduced = useReducedMotion();
   const [stage, setStage] = useState<string>(TRACE_STAGES[0]);
   const playerRef = useRef<TimelinePlayer | null>(null);
+  const visibilityRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const player = createTimelinePlayer({
@@ -54,9 +56,14 @@ export function AppTraceReplay() {
     });
 
     playerRef.current = player;
-    player.play();
+    const cleanupVisibility = createVisibilityGate({
+      target: visibilityRef.current,
+      play: player.play,
+      reducedMotion: Boolean(reduced),
+    });
 
     return () => {
+      cleanupVisibility();
       player.cleanup();
       if (playerRef.current === player) playerRef.current = null;
     };
@@ -81,7 +88,10 @@ export function AppTraceReplay() {
 
   return (
     <SectionContainer className="py-20 md:py-28">
-      <div className="grid items-start gap-10 lg:grid-cols-[minmax(250px,350px)_1fr] lg:gap-14">
+      <div
+        ref={visibilityRef}
+        className="grid items-start gap-10 lg:grid-cols-[minmax(250px,350px)_1fr] lg:gap-14"
+      >
         <div>
           <span className="text-[12px] uppercase tracking-wide text-neutral-900/40">
             {t('eyebrow')}
