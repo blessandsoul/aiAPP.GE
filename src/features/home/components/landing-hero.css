@@ -183,12 +183,21 @@
 /* Typewriter - its own line, centered, fixed-width container */
 .typewriter {
   display: block;
+  max-width: 100%;
   text-align: center;
   letter-spacing: normal;
   font-feature-settings: "kern" 1, "liga" 1;
   white-space: nowrap;
   margin: 32px auto 0;
   font-weight: 700;
+}
+@media (max-width: 767px) {
+  .typewriter {
+    min-width: 0 !important;
+    min-height: 2.24em;
+    white-space: normal;
+  }
+  .tw-text { overflow-wrap: anywhere; }
 }
 @media (min-width: 768px) {
   .typewriter { margin-top: 48px; }

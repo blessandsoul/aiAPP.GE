@@ -1,109 +1,54 @@
-export const TRACE_STAGES = [
+export const BUSINESS_STAGES = [
   'request',
-  'wrong-tool',
-  'blocked',
-  'correct-tool',
-  'response',
-  'passed',
+  'safety-check',
+  'action',
+  'customer-result',
 ];
 
 export const HANDOFF_ITEMS = [
-  'repository',
-  'hosting',
-  'modelAccount',
-  'evalSuite',
-  'runbook',
+  'code',
+  'hostingAccess',
+  'serviceAccounts',
+  'documentation',
+  'operatingControl',
 ];
 
-const ORDER_ID = 'ord_[redacted]_1842';
-
-const REQUEST = {
-  orderId: ORDER_ID,
-  intent: 'order_status',
-};
-
-const WRONG_TOOL_CALL = {
-  name: 'search_docs',
-  arguments: {
-    orderId: ORDER_ID,
-    query: 'order status',
-  },
-};
-
-const CORRECT_TOOL_CALL = {
-  name: 'lookup_order',
-  arguments: {
-    orderId: ORDER_ID,
-  },
-};
-
-const ANSWER = {
-  orderId: ORDER_ID,
-  status: 'in_transit',
-  eta: '2026-07-14',
-};
-
-const TRACE_BASE = {
-  traceId: 'trace_[redacted]_01',
-  request: REQUEST,
-  toolCall: null,
-  toolResult: null,
-  answer: null,
-  blocked: false,
+const BUSINESS_BASE = {
+  requestVisible: true,
+  checkStatus: 'waiting',
+  actionStatus: 'waiting',
   customerVisible: false,
-  verdict: 'running',
-  badPathStoppedBeforeCustomer: false,
   resultKey: null,
 };
 
-const TRACE_FRAMES = {
+const BUSINESS_FRAMES = {
   request: {
-    ...TRACE_BASE,
+    ...BUSINESS_BASE,
     stage: 'request',
   },
-  'wrong-tool': {
-    ...TRACE_BASE,
-    stage: 'wrong-tool',
-    toolCall: WRONG_TOOL_CALL,
+  'safety-check': {
+    ...BUSINESS_BASE,
+    stage: 'safety-check',
+    checkStatus: 'passed',
   },
-  blocked: {
-    ...TRACE_BASE,
-    stage: 'blocked',
-    toolCall: WRONG_TOOL_CALL,
-    toolResult: {
-      status: 'blocked',
-      reason: 'tool_policy_mismatch',
-    },
-    blocked: true,
+  action: {
+    ...BUSINESS_BASE,
+    stage: 'action',
+    checkStatus: 'passed',
+    actionStatus: 'allowed',
   },
-  'correct-tool': {
-    ...TRACE_BASE,
-    stage: 'correct-tool',
-    toolCall: CORRECT_TOOL_CALL,
-  },
-  response: {
-    ...TRACE_BASE,
-    stage: 'response',
-    toolCall: CORRECT_TOOL_CALL,
-    toolResult: ANSWER,
-    answer: ANSWER,
+  'customer-result': {
+    ...BUSINESS_BASE,
+    stage: 'customer-result',
+    checkStatus: 'passed',
+    actionStatus: 'allowed',
     customerVisible: true,
-  },
-  passed: {
-    ...TRACE_BASE,
-    stage: 'passed',
-    toolCall: CORRECT_TOOL_CALL,
-    toolResult: ANSWER,
-    answer: ANSWER,
-    customerVisible: true,
-    verdict: 'passed',
-    badPathStoppedBeforeCustomer: true,
-    resultKey: 'passed',
+    resultKey: 'sent',
   },
 };
 
-export function traceFrame(stage) {
-  return TRACE_FRAMES[stage] ?? TRACE_FRAMES.request;
+export function businessFrame(stage) {
+  return BUSINESS_FRAMES[stage] ?? BUSINESS_FRAMES.request;
 }
 
 export function handoffFrame(transferredCount) {
@@ -117,20 +62,21 @@ export function handoffFrame(transferredCount) {
     nextItem: HANDOFF_ITEMS[count] ?? null,
     items: HANDOFF_ITEMS.map((key, index) => ({
       key,
-      from: 'agency',
-      owner: index < count ? 'client' : 'agency',
+      owner: index < count ? 'client' : 'ainow',
       transferred: index < count,
     })),
     complete,
     owner: complete ? 'client' : 'transition',
-    operator: complete ? 'client' : 'agency',
-    clientOwns: complete,
     clientCanOperate: complete,
     resultKey: complete ? 'clientOwned' : null,
   };
 }
 
 /**
+ * Play a deterministic list of states once. The family loop owns visibility,
+ * repetition, final hold, and manual ownership; this helper owns only the
+ * timers inside one pass.
+ *
  * @template T
  * @param {{
  *   stages?: T[],
@@ -143,7 +89,7 @@ export function handoffFrame(transferredCount) {
  */
 export function createTimelinePlayer({
   stages = [],
-  durationMs = 7_200,
+  durationMs = 6_000,
   schedule = setTimeout,
   cancel: cancelScheduled = clearTimeout,
   reducedMotion = false,

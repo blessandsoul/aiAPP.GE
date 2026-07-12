@@ -1,153 +1,184 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { motion, useReducedMotion } from 'framer-motion';
+import { useReducedMotion } from 'framer-motion';
+import { Ico } from '@/components/common/Ico';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { cn } from '@/lib/utils';
+import { createAppDemoLoop } from './app-demo-visibility.mjs';
 
-/* =========================================================================
-   AppCost: the number a general development shop cannot give you.
-
-   Everyone asks what the build costs. That is the smaller half of the bill, and the reason
-   nobody tells you is not malice, it is that a shop which has never run an agent in production
-   does not know. An agent costs money every single time it thinks, forever.
-
-   So the widget does the arithmetic in front of him on today's public token prices, then puts
-   the three-year running cost next to the build and shows what share the build actually is.
-   The industry finding (initial development is roughly a quarter to a third of a three-year
-   total) is attributed as someone else's, because it is.
-
-   Saying this out loud costs us the deal with a buyer who wants to hear a small number. It
-   wins the deal with the one who has been burned by a small number before, and he is the one
-   worth having.
-   ========================================================================= */
-
-/* Public per-million-token rates, rounded, blended input and output. They move constantly, and
-   the note under the widget says so: this is arithmetic, not a quote. */
-const MODEL = {
-  m1: { usdPerMTok: 1.2 },
-  m2: { usdPerMTok: 9 },
-  m3: { usdPerMTok: 42 },
+const COST_FACTOR = {
+  m1: 0.008,
+  m2: 0.014,
+  m3: 0.024,
 } as const;
-type Tier = keyof typeof MODEL;
 
-const TOKENS_PER_TURN = 2400; // prompt plus context plus completion, a realistic RAG turn
-const BUILD_USD = 26000; // an illustrative mid-size agent build, stated as illustrative
+type Complexity = keyof typeof COST_FACTOR;
+type DemoLoop = {
+  replay: () => void;
+  takeControl: () => void;
+  cleanup: () => void;
+};
+
+const INITIAL_SAMPLE = { conversations: 1_200, steps: 2, complexity: 'm1' as Complexity };
+const FINAL_SAMPLE = { conversations: 6_000, steps: 5, complexity: 'm2' as Complexity };
+const CYCLE_MS = 6_000;
 
 export function AppCost() {
   const t = useTranslations('product.cost');
   const reduced = useReducedMotion();
-  const [convos, setConvos] = useState(3000);
-  const [turns, setTurns] = useState(4);
-  const [tier, setTier] = useState<Tier>('m2');
+  const [conversations, setConversations] = useState(INITIAL_SAMPLE.conversations);
+  const [steps, setSteps] = useState(INITIAL_SAMPLE.steps);
+  const [complexity, setComplexity] = useState<Complexity>(INITIAL_SAMPLE.complexity);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const loopRef = useRef<DemoLoop | null>(null);
 
-  const tokens = convos * turns * TOKENS_PER_TURN;
-  const monthly = (tokens / 1_000_000) * MODEL[tier].usdPerMTok;
-  const run3 = monthly * 36;
-  const total = run3 + BUILD_USD;
-  const buildShare = Math.round((BUILD_USD / total) * 100);
+  const clear = useCallback(() => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+  }, []);
 
-  const usd = (n: number) =>
-    new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(Math.round(n));
+  const setSample = useCallback((sample: typeof INITIAL_SAMPLE) => {
+    setConversations(sample.conversations);
+    setSteps(sample.steps);
+    setComplexity(sample.complexity);
+  }, []);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const play = () => {
+      clear();
+      setSample(INITIAL_SAMPLE);
+      timers.current.push(setTimeout(() => setConversations(FINAL_SAMPLE.conversations), 2_000));
+      timers.current.push(setTimeout(() => setSteps(FINAL_SAMPLE.steps), 4_000));
+      timers.current.push(setTimeout(() => setComplexity(FINAL_SAMPLE.complexity), CYCLE_MS));
+    };
+
+    const loop = createAppDemoLoop({
+      target: sectionRef.current,
+      reducedMotion: Boolean(reduced),
+      cycleMs: CYCLE_MS,
+      play,
+      showFinal: () => setSample(FINAL_SAMPLE),
+      reset: () => setSample(INITIAL_SAMPLE),
+      stop: clear,
+    });
+    loopRef.current = loop;
+
+    return () => {
+      loop.cleanup();
+      clear();
+      if (loopRef.current === loop) loopRef.current = null;
+    };
+  }, [clear, reduced, setSample]);
+
+  const monthly = Math.max(20, conversations * steps * COST_FACTOR[complexity]);
+  const formatNumber = (value: number) =>
+    new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(Math.round(value));
+
+  const takeControl = () => loopRef.current?.takeControl();
+  const replay = () => loopRef.current?.replay();
+
+  const updateConversations = (value: number) => {
+    takeControl();
+    setConversations(value);
+  };
+  const updateSteps = (value: number) => {
+    takeControl();
+    setSteps(value);
+  };
+  const updateComplexity = (value: Complexity) => {
+    takeControl();
+    setComplexity(value);
+  };
 
   return (
     <SectionContainer className="py-20 md:py-28">
-      <div className="grid gap-10 lg:grid-cols-[minmax(280px,380px)_1fr] lg:gap-14">
-        <div>
-          <span className="text-[12px] uppercase tracking-wide text-neutral-900/40">
-            {t('eyebrow')}
-          </span>
+      <div ref={sectionRef} className="grid min-w-0 gap-10 lg:grid-cols-[minmax(280px,380px)_minmax(0,1fr)] lg:gap-14">
+        <div className="min-w-0">
+          <span className="text-[12px] tracking-wide text-neutral-900/45">{t('eyebrow')}</span>
           <h2 className="mt-4 text-balance font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-neutral-900 md:text-4xl">
             {t('heading')}
           </h2>
-          <p className="mt-3 text-pretty text-[15px] leading-relaxed text-[#525252]">
-            {t('subtitle')}
-          </p>
+          <p className="mt-3 text-pretty text-[15px] leading-relaxed text-[#525252]">{t('subtitle')}</p>
 
           <div className="mt-8 flex flex-col gap-6">
-            <Range label={t('convos')} value={convos} min={200} max={50000} step={200} onChange={setConvos} />
-            <Range label={t('turns')} value={turns} min={1} max={12} step={1} onChange={setTurns} />
+            <Range
+              label={t('conversations')}
+              value={conversations}
+              min={200}
+              max={50_000}
+              step={200}
+              onChange={updateConversations}
+            />
+            <Range label={t('steps')} value={steps} min={1} max={12} step={1} onChange={updateSteps} />
 
             <div>
-              <span className="text-[13px] font-medium text-neutral-900/70">{t('model')}</span>
-              <div className="mt-3 flex gap-2">
-                {(['m1', 'm2', 'm3'] as Tier[]).map((m) => (
+              <span className="text-[13px] font-medium text-neutral-900/70">{t('complexity')}</span>
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                {(['m1', 'm2', 'm3'] as Complexity[]).map((item) => (
                   <button
-                    key={m}
+                    key={item}
                     type="button"
-                    onClick={() => setTier(m)}
-                    aria-pressed={tier === m}
+                    onClick={() => updateComplexity(item)}
+                    aria-pressed={complexity === item}
                     className={cn(
-                      'min-h-[44px] flex-1 rounded-xl px-3 text-[13px] font-semibold',
-                      'transition-[transform,background-color,color,box-shadow] duration-150 ease-out',
-                      'active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2',
-                      tier === m
-                        ? 'text-[var(--primary-foreground)]'
-                        : 'bg-[#fafafa] text-[#525252] shadow-[0_0_0_1px_rgba(0,0,0,0.07)] md:hover:bg-[#f0f0f0]',
+                      'min-h-11 rounded-xl px-2 text-[13px] font-semibold transition-[transform,background-color,color,box-shadow] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2',
+                      complexity === item
+                        ? 'bg-neutral-900 text-white'
+                        : 'bg-[#fafafa] text-neutral-900/65 shadow-[0_0_0_1px_rgba(0,0,0,0.08)]',
                     )}
-                    style={tier === m ? { background: 'var(--brand)' } : undefined}
                   >
-                    {t(m)}
+                    {t(item)}
                   </button>
                 ))}
               </div>
             </div>
+
+            <button
+              type="button"
+              onClick={replay}
+              className="inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-[#fafafa] px-5 text-[13px] font-semibold text-neutral-900 shadow-[0_0_0_1px_rgba(0,0,0,0.09)] transition-transform active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2"
+            >
+              <Ico name="solar:refresh-bold-duotone" className="h-4 w-4" />
+              {t('replay')}
+            </button>
           </div>
         </div>
 
-        {/* the reveal */}
-        <div>
-          <div className="rounded-2xl bg-[#0e0e11] p-6 md:p-8">
-            <span className="text-[12px] uppercase tracking-wide text-white/40">{t('monthly')}</span>
-            <p className="mt-3 font-display text-5xl font-extrabold tabular-nums leading-none text-white md:text-6xl">
-              <span style={{ color: 'var(--brand)' }}>$</span>
-              {usd(monthly)}
-              <span className="ml-2 text-xl font-bold text-white/35">{t('perMonth')}</span>
-            </p>
-
-            {/* build against run, as a single bar. the shape IS the argument. */}
-            <div className="mt-9">
-              <div className="flex h-12 w-full overflow-hidden rounded-xl">
-                <motion.div
-                  initial={false}
-                  animate={{ flexGrow: buildShare }}
-                  transition={{ duration: reduced ? 0 : 0.4, ease: [0.23, 1, 0.32, 1] }}
-                  className="flex items-center justify-center bg-white/12 text-[11px] font-bold uppercase tracking-wide text-white/60"
-                  style={{ flexBasis: 0 }}
-                >
-                  {t('build')}
-                </motion.div>
-                <motion.div
-                  initial={false}
-                  animate={{ flexGrow: 100 - buildShare }}
-                  transition={{ duration: reduced ? 0 : 0.4, ease: [0.23, 1, 0.32, 1] }}
-                  className="flex items-center justify-center text-[11px] font-bold uppercase tracking-wide"
-                  style={{
-                    flexBasis: 0,
-                    background: 'var(--brand)',
-                    color: 'var(--primary-foreground)',
-                  }}
-                >
-                  {t('run3')}
-                </motion.div>
-              </div>
-
-              <div className="mt-4 flex flex-wrap items-baseline gap-x-3">
-                <span className="text-[13px] text-white/45">{t('share')}</span>
-                <span className="font-display text-3xl font-extrabold tabular-nums text-white">
-                  {buildShare}%
-                </span>
-                <span className="text-[13px] text-white/45">{t('shareOf')}</span>
-              </div>
-            </div>
-
-            <p className="mt-7 border-t border-white/10 pt-5 text-pretty text-[13px] leading-relaxed text-white/50">
-              {t('reveal')}
-            </p>
+        <div className="min-w-0 overflow-hidden rounded-3xl bg-[#111214] p-5 text-white shadow-[0_24px_60px_-42px_rgba(0,0,0,0.72)] md:p-8">
+          <div className="flex items-center justify-between gap-4">
+            <span className="flex items-center gap-2 text-[13px] font-semibold text-white/55">
+              <Ico name="solar:calculator-bold-duotone" className="h-5 w-5 text-[var(--brand)]" />
+              {t('monthly')}
+            </span>
+            <span className="rounded-full bg-white/[0.08] px-3 py-1 text-[11px] font-semibold text-white/55">
+              {t('usage')}
+            </span>
           </div>
 
-          <p className="mt-4 text-pretty text-[12px] leading-relaxed text-[#737373]">{t('note')}</p>
+          <p className="mt-8 break-words font-display text-[clamp(2.8rem,10vw,5.5rem)] font-extrabold tabular-nums leading-none text-white">
+            <span className="mr-2 text-[clamp(1rem,3vw,1.4rem)] font-bold text-[var(--brand)]">USD</span>
+            {formatNumber(monthly)}
+            <span className="ml-2 text-base font-semibold text-white/40 md:text-xl">{t('perMonth')}</span>
+          </p>
+
+          <div className="mt-9 grid gap-3 md:grid-cols-3">
+            <Metric icon="solar:chat-round-dots-bold-duotone" label={t('conversations')} value={formatNumber(conversations)} />
+            <Metric icon="solar:layers-minimalistic-bold-duotone" label={t('steps')} value={formatNumber(steps)} />
+            <Metric icon="solar:spedometer-max-bold-duotone" label={t('complexity')} value={t(complexity)} />
+          </div>
+
+          <div className="mt-6 rounded-2xl bg-white/[0.07] p-4 md:p-5">
+            <span className="flex items-center gap-2 text-[13px] font-bold text-[var(--brand)]">
+              <Ico name="solar:wallet-bold-duotone" className="h-5 w-5" />
+              {t('result')}
+            </span>
+            <p className="mt-2 text-[13px] leading-relaxed text-white/58">{t('note')}</p>
+          </div>
         </div>
       </div>
     </SectionContainer>
@@ -167,15 +198,13 @@ function Range({
   min: number;
   max: number;
   step: number;
-  onChange: (v: number) => void;
+  onChange: (value: number) => void;
 }) {
   return (
-    <label className="block">
+    <label className="block min-w-0">
       <span className="flex items-baseline justify-between gap-4">
         <span className="text-[13px] font-medium text-neutral-900/70">{label}</span>
-        <span className="font-display text-lg font-extrabold tabular-nums text-neutral-900">
-          {value}
-        </span>
+        <span className="font-display text-lg font-extrabold tabular-nums text-neutral-900">{value}</span>
       </span>
       <input
         type="range"
@@ -183,9 +212,19 @@ function Range({
         max={max}
         step={step}
         value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="mt-3 h-10 w-full cursor-pointer appearance-none bg-transparent focus-visible:outline-none [&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-[#e5e5e5] [&::-webkit-slider-thumb]:mt-[-7px] [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-neutral-900 [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:duration-150 [&::-webkit-slider-thumb]:ease-out active:[&::-webkit-slider-thumb]:scale-[0.96] [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-neutral-900 [&::-moz-range-track]:h-1.5 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-[#e5e5e5]"
+        onChange={(event) => onChange(Number(event.target.value))}
+        className="mt-2 h-11 w-full cursor-pointer appearance-none bg-transparent focus-visible:outline-none [&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-[#e5e5e5] [&::-webkit-slider-thumb]:mt-[-7px] [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-neutral-900 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-neutral-900 [&::-moz-range-track]:h-1.5 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-[#e5e5e5]"
       />
     </label>
+  );
+}
+
+function Metric({ icon, label, value }: { icon: string; label: string; value: string }) {
+  return (
+    <div className="min-w-0 rounded-2xl bg-white/[0.055] p-4">
+      <Ico name={icon} className="h-5 w-5 text-white/50" />
+      <span className="mt-4 block break-words text-[18px] font-bold text-white">{value}</span>
+      <span className="mt-1 block text-[11px] leading-snug text-white/45">{label}</span>
+    </div>
   );
 }

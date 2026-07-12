@@ -150,6 +150,10 @@ export function LandingHero() {
     const applyMaxWidth = () => {
       document.fonts.ready.then(() => {
         if (cancelled) return;
+        if (window.innerWidth < 768) {
+          el.style.minWidth = '0px';
+          return;
+        }
         const maxW = measureMaxWidth();
         const caret = el.querySelector<HTMLElement>('.tw-caret');
         const caretW = caret ? caret.getBoundingClientRect().width + 2 : 8;
@@ -531,11 +535,11 @@ void main(){vec4 o=vec4(0.0); mainImage(o,gl_FragCoord.xy); fragColor=o;}`;
           above everything with `order-first`, so a phone opened on a black call widget with no
           brand and no headline anywhere on screen: the product before the reader knew whose it was.
           At lg the explicit col/row starts fold A and C back into one column and let B span both. */}
-      <div className="max-w-[1180px] mx-auto relative z-10">
-        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-x-16 lg:gap-y-6">
+      <div className="w-full min-w-0 max-w-[1180px] mx-auto relative z-10">
+        <div className="grid min-w-0 gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-x-16 lg:gap-y-6">
           {/* A. identity, audience, the pain */}
-          <div className="order-1 text-center lg:order-0 lg:col-start-1 lg:row-start-1 lg:text-left">
-            <div className="flex flex-col items-center lg:items-start">
+          <div className="order-1 min-w-0 text-center lg:order-0 lg:col-start-1 lg:row-start-1 lg:text-left">
+            <div className="flex w-full min-w-0 flex-col items-center lg:items-start">
               <div
                 className={cn(
                   'wordmark-3d hero-wordmark text-[clamp(1.75rem,4vw,2.75rem)] leading-none',
@@ -546,7 +550,7 @@ void main(){vec4 o=vec4(0.0); mainImage(o,gl_FragCoord.xy); fragColor=o;}`;
                 <span className="wm-mark">{SITE.wordmark.mark}</span>
                 <span className="wm-accent" aria-hidden="true" />
               </div>
-              <div className={cn('hero-tagline', heroScrolled && 'scrolled')}>
+              <div className={cn('hero-tagline w-full min-w-0', heroScrolled && 'scrolled')}>
                 <span className="ht-text">
                   {t('taglinePrefix')} <span className="ht-works">{t('taglineWorks')}</span>
                 </span>
@@ -557,7 +561,7 @@ void main(){vec4 o=vec4(0.0); mainImage(o,gl_FragCoord.xy); fragColor=o;}`;
             {/* WHO IT IS FOR. The audit's second finding: not one of the six named its buyer
                 above the fold, and a reader who cannot see himself in the first screen leaves,
                 and he is right to. Plain nouns, not a segment. */}
-            <p className="hero-audience mt-7 text-[13px] font-semibold uppercase tracking-[0.09em] text-neutral-900/45 md:text-[13.5px]">
+            <p className="hero-audience mt-7 text-[13px] font-semibold tracking-[0.04em] text-neutral-900/45 md:text-[13.5px]">
               {t('audience')}
             </p>
 
@@ -598,12 +602,12 @@ void main(){vec4 o=vec4(0.0); mainImage(o,gl_FragCoord.xy); fragColor=o;}`;
               the one thing on this screen that answers "what is it" without a single word being
               read: aiCALL shows a call confirming a row, aiDOCS shows a receipt collapsing into a
               ledger line, vibecoding shows a redacted key it just found. */}
-          <div className="relative order-2 lg:order-0 lg:col-start-2 lg:row-start-1 lg:row-span-2">
+          <div className="relative order-2 min-w-0 lg:order-0 lg:col-start-2 lg:row-start-1 lg:row-span-2">
             <HeroProof />
           </div>
 
           {/* C. how it works, the one button, the promise, the family */}
-          <div className="order-3 text-center lg:order-0 lg:col-start-1 lg:row-start-2 lg:text-left">
+          <div className="order-3 min-w-0 text-center lg:order-0 lg:col-start-1 lg:row-start-2 lg:text-left">
             <p className="mx-auto max-w-xl text-pretty text-[16px] leading-relaxed text-[#525252] lg:mx-0 md:text-[17px]">
               {t('sub')}
             </p>
@@ -613,19 +617,7 @@ void main(){vec4 o=vec4(0.0); mainImage(o,gl_FragCoord.xy); fragColor=o;}`;
             <MagneticButton className="w-full sm:w-auto">
               <a href="#cta" className="btn-primary w-full justify-center sm:w-auto">
                 <span>{t('ctaResults')}</span>
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
+                <Ico name="solar:arrow-right-bold-duotone" className="h-[18px] w-[18px]" />
               </a>
             </MagneticButton>
             {/* The second call to action is gone. A ghost "book a call" next to the primary

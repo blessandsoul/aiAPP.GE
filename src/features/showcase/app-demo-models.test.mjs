@@ -1,96 +1,85 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import {
-  HANDOFF_ITEMS,
-  TRACE_STAGES,
-  createTimelinePlayer,
-  handoffFrame,
-  traceFrame,
-} from './app-demo-models.mjs';
+import * as model from './app-demo-models.mjs';
 
-test('trace stages keep the unsafe call before the correction and customer answer', () => {
-  assert.deepEqual(TRACE_STAGES, [
+test('the customer-facing story has exactly four business stages', () => {
+  assert.deepEqual(model.BUSINESS_STAGES, [
     'request',
-    'wrong-tool',
-    'blocked',
-    'correct-tool',
-    'response',
-    'passed',
+    'safety-check',
+    'action',
+    'customer-result',
   ]);
-
-  const wrongTool = traceFrame('wrong-tool');
-  const blocked = traceFrame('blocked');
-
-  assert.equal(wrongTool.toolCall.name, 'search_docs');
-  assert.equal(wrongTool.answer, null);
-  assert.equal(blocked.toolCall.name, 'search_docs');
-  assert.equal(blocked.blocked, true);
-  assert.equal(blocked.answer, null);
-  assert.equal(blocked.customerVisible, false);
 });
 
-test('the corrected lookup produces a deterministic passed answer', () => {
-  const corrected = traceFrame('correct-tool');
-  const response = traceFrame('response');
-  const passed = traceFrame('passed');
+test('nothing reaches the customer before the checked result stage', () => {
+  assert.equal(typeof model.businessFrame, 'function');
 
-  assert.equal(corrected.toolCall.name, 'lookup_order');
-  assert.equal(corrected.answer, null);
-  assert.equal(response.toolCall.name, 'lookup_order');
-  assert.deepEqual(response.answer, {
-    orderId: 'ord_[redacted]_1842',
-    status: 'in_transit',
-    eta: '2026-07-14',
-  });
-  assert.equal(passed.verdict, 'passed');
-  assert.equal(passed.customerVisible, true);
-  assert.equal(passed.badPathStoppedBeforeCustomer, true);
-  assert.equal(passed.resultKey, 'passed');
+  assert.equal(model.businessFrame('request').customerVisible, false);
+  assert.equal(model.businessFrame('safety-check').customerVisible, false);
+  assert.equal(model.businessFrame('action').customerVisible, false);
+  assert.equal(model.businessFrame('customer-result').customerVisible, true);
 });
 
-test('trace fixtures contain only repeatable redacted identifiers and JSON data', () => {
-  assert.deepEqual(traceFrame('passed'), traceFrame('passed'));
-  assert.match(JSON.stringify(traceFrame('passed')), /\[redacted\]/);
-  assert.doesNotMatch(JSON.stringify(traceFrame('passed')), /Math\.random|Date\.now/);
+test('the safety check must pass before the action is allowed', () => {
+  assert.equal(typeof model.businessFrame, 'function');
+
+  const request = model.businessFrame('request');
+  const checked = model.businessFrame('safety-check');
+  const action = model.businessFrame('action');
+  const result = model.businessFrame('customer-result');
+
+  assert.equal(request.checkStatus, 'waiting');
+  assert.equal(request.actionStatus, 'waiting');
+  assert.equal(checked.checkStatus, 'passed');
+  assert.equal(checked.actionStatus, 'waiting');
+  assert.equal(action.checkStatus, 'passed');
+  assert.equal(action.actionStatus, 'allowed');
+  assert.equal(result.actionStatus, 'allowed');
+  assert.equal(result.resultKey, 'sent');
 });
 
-test('all five handoff assets move from agency to client in a fixed order', () => {
-  assert.deepEqual(HANDOFF_ITEMS, [
-    'repository',
-    'hosting',
-    'modelAccount',
-    'evalSuite',
-    'runbook',
+test('unknown business stages fail closed to the initial request', () => {
+  assert.equal(typeof model.businessFrame, 'function');
+  assert.deepEqual(model.businessFrame('not-a-stage'), model.businessFrame('request'));
+});
+
+test('handoff names the five things a business owner keeps', () => {
+  assert.deepEqual(model.HANDOFF_ITEMS, [
+    'code',
+    'hostingAccess',
+    'serviceAccounts',
+    'documentation',
+    'operatingControl',
   ]);
+});
 
-  for (let count = 0; count <= HANDOFF_ITEMS.length; count += 1) {
-    const frame = handoffFrame(count);
-    assert.deepEqual(frame.transferred, HANDOFF_ITEMS.slice(0, count));
+test('handoff completion means the client owns and can operate the application', () => {
+  assert.equal(typeof model.handoffFrame, 'function');
+
+  for (let count = 0; count <= model.HANDOFF_ITEMS.length; count += 1) {
+    const frame = model.handoffFrame(count);
+    assert.deepEqual(frame.transferred, model.HANDOFF_ITEMS.slice(0, count));
     assert.deepEqual(
       frame.items.map(({ key, owner }) => [key, owner]),
-      HANDOFF_ITEMS.map((key, index) => [key, index < count ? 'client' : 'agency']),
+      model.HANDOFF_ITEMS.map((key, index) => [key, index < count ? 'client' : 'ainow']),
     );
   }
+
+  const complete = model.handoffFrame(model.HANDOFF_ITEMS.length);
+  assert.equal(complete.complete, true);
+  assert.equal(complete.owner, 'client');
+  assert.equal(complete.clientCanOperate, true);
+  assert.equal(complete.resultKey, 'clientOwned');
 });
 
-test('handoff completion means the client owns and can operate the system', () => {
-  const frame = handoffFrame(HANDOFF_ITEMS.length);
-
-  assert.equal(frame.complete, true);
-  assert.equal(frame.owner, 'client');
-  assert.equal(frame.operator, 'client');
-  assert.equal(frame.clientCanOperate, true);
-  assert.equal(frame.resultKey, 'clientOwned');
-  assert.equal(frame.items.every((item) => item.owner === 'client'), true);
-});
-
-test('timeline emits one automatic trace pass in order over exactly 7,200 ms', () => {
+test('timeline emits one deterministic business pass over exactly 6,000 ms', () => {
+  assert.equal(typeof model.createTimelinePlayer, 'function');
   const clock = createManualClock();
   const emitted = [];
-  const player = createTimelinePlayer({
-    stages: TRACE_STAGES,
-    durationMs: 7_200,
+  const player = model.createTimelinePlayer({
+    stages: model.BUSINESS_STAGES,
+    durationMs: 6_000,
     onStage: (stage) => emitted.push(stage),
     schedule: clock.schedule,
     cancel: clock.cancel,
@@ -99,74 +88,72 @@ test('timeline emits one automatic trace pass in order over exactly 7,200 ms', (
   player.play();
   assert.deepEqual(emitted, ['request']);
 
-  clock.advanceBy(7_199);
-  assert.deepEqual(emitted, TRACE_STAGES.slice(0, -1));
+  clock.advanceBy(5_999);
+  assert.deepEqual(emitted, model.BUSINESS_STAGES.slice(0, -1));
 
   clock.advanceBy(1);
-  assert.deepEqual(emitted, TRACE_STAGES);
+  assert.deepEqual(emitted, model.BUSINESS_STAGES);
   assert.equal(clock.pendingCount(), 0);
 });
 
-test('replay cancels the superseded pass and resets to the first stage', () => {
+test('timeline replay cancels a superseded pass and restarts from the first stage', () => {
+  assert.equal(typeof model.createTimelinePlayer, 'function');
   const clock = createManualClock();
   const emitted = [];
-  const player = createTimelinePlayer({
-    stages: HANDOFF_ITEMS.map((_, index) => index + 1),
+  const player = model.createTimelinePlayer({
+    stages: model.BUSINESS_STAGES,
+    durationMs: 6_000,
     onStage: (stage) => emitted.push(stage),
     schedule: clock.schedule,
     cancel: clock.cancel,
   });
 
   player.play();
-  clock.advanceBy(1_800);
-  assert.deepEqual(emitted, [1, 2]);
+  clock.advanceBy(2_000);
+  assert.deepEqual(emitted, ['request', 'safety-check']);
 
   player.replay();
-  assert.deepEqual(emitted, [1, 2, 1]);
-  assert.equal(clock.pendingCount(), 4);
+  assert.deepEqual(emitted, ['request', 'safety-check', 'request']);
+  assert.equal(clock.pendingCount(), 3);
 
-  clock.advanceBy(7_200);
-  assert.deepEqual(emitted, [1, 2, 1, 2, 3, 4, 5]);
+  clock.advanceBy(6_000);
+  assert.deepEqual(emitted, [
+    'request',
+    'safety-check',
+    'request',
+    'safety-check',
+    'action',
+    'customer-result',
+  ]);
 });
 
-test('cancel and cleanup remove every outstanding timeline timer', () => {
+test('timeline cleanup removes every timer and reduced motion renders only the final state', () => {
+  assert.equal(typeof model.createTimelinePlayer, 'function');
   const clock = createManualClock();
-  const emitted = [];
-  const player = createTimelinePlayer({
-    stages: TRACE_STAGES,
-    onStage: (stage) => emitted.push(stage),
+  const normal = [];
+  const player = model.createTimelinePlayer({
+    stages: model.BUSINESS_STAGES,
+    onStage: (stage) => normal.push(stage),
     schedule: clock.schedule,
     cancel: clock.cancel,
   });
 
   player.play();
-  assert.equal(clock.pendingCount(), 5);
-  player.cancel();
-  assert.equal(clock.pendingCount(), 0);
-
-  player.play();
-  assert.equal(clock.pendingCount(), 5);
+  assert.equal(clock.pendingCount(), 3);
   player.cleanup();
   assert.equal(clock.pendingCount(), 0);
-
   clock.advanceBy(20_000);
-  assert.deepEqual(emitted, ['request', 'request']);
-});
+  assert.deepEqual(normal, ['request']);
 
-test('reduced motion emits only the final meaningful state and schedules nothing', () => {
-  const clock = createManualClock();
-  const emitted = [];
-  const player = createTimelinePlayer({
-    stages: TRACE_STAGES,
+  const reduced = [];
+  model.createTimelinePlayer({
+    stages: model.BUSINESS_STAGES,
     reducedMotion: true,
-    onStage: (stage) => emitted.push(stage),
+    onStage: (stage) => reduced.push(stage),
     schedule: clock.schedule,
     cancel: clock.cancel,
-  });
-
-  player.play();
-
-  assert.deepEqual(emitted, ['passed']);
+  }).play();
+  assert.deepEqual(reduced, ['customer-result']);
   assert.equal(clock.pendingCount(), 0);
 });
 
@@ -195,7 +182,6 @@ function createManualClock() {
         .sort((a, b) => a[1].dueAt - b[1].dueAt || a[0] - b[0])[0];
 
       if (!nextJob) break;
-
       const [id, job] = nextJob;
       jobs.delete(id);
       now = job.dueAt;

@@ -1,49 +1,12 @@
-/** Start one existing app-demo timeline when its rendered box first becomes visible. */
-export function createVisibilityGate({
-  target,
-  play,
-  reducedMotion = false,
-  Observer = globalThis.IntersectionObserver,
-  threshold = 0.35,
-}) {
-  if (typeof play !== 'function') {
-    throw new TypeError('createVisibilityGate requires a play function');
-  }
+import { createDemoLoop } from '../home/components/lib/demo-loop.mjs';
 
-  let active = true;
-  let hasPlayed = false;
-  let observer = null;
+const VISIBILITY_THRESHOLD = 0.35;
+const FINAL_HOLD_MS = 2000;
 
-  const playOnce = () => {
-    if (!active || hasPlayed) return;
-    hasPlayed = true;
-    play();
-  };
-
-  if (reducedMotion || !target || typeof Observer !== 'function') {
-    playOnce();
-  } else {
-    observer = new Observer(
-      ([entry]) => {
-        if (
-          hasPlayed ||
-          !entry?.isIntersecting ||
-          (entry.intersectionRatio ?? 0) < threshold
-        ) {
-          return;
-        }
-        playOnce();
-        observer?.disconnect();
-        observer = null;
-      },
-      { threshold },
-    );
-    observer.observe(target);
-  }
-
-  return function cleanupVisibilityGate() {
-    active = false;
-    observer?.disconnect();
-    observer = null;
-  };
+export function createAppDemoLoop(options) {
+  return createDemoLoop({
+    ...options,
+    threshold: VISIBILITY_THRESHOLD,
+    holdMs: FINAL_HOLD_MS,
+  });
 }
