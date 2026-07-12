@@ -31,10 +31,10 @@
     "legal": "Zemo Plato, III Array, N14, Apt. 87, Tbilisi 0163"
   },
   "landingNav": {
-    "showcase": "What we ship with it",
+    "showcase": "See what ships",
     "process": "How it works",
     "faq": "Questions",
-    "cta": "Book the audit"
+    "cta": "Book an audit"
   },
   "landingFooter": {
     "company": "AI NOW LLC, Tbilisi, Georgia",
@@ -43,10 +43,10 @@
     "socialHeading": "Social",
     "languageHeading": "Language",
     "contact": "Contact",
-    "sectionShowcase": "What we ship with it",
+    "sectionShowcase": "See what ships",
     "sectionWork": "How it works",
     "sectionFaq": "Questions",
-    "ctaHuge": "Book the audit. It comes off the build.",
+    "ctaHuge": "Book the audit",
     "copyright": "© {year} aiAPP, an aiNOW product. All rights reserved."
   },
   "product": {
@@ -60,17 +60,12 @@
       "taglineWorks": "holds up",
       "typewriterWords": "evals,guardrails,traces,a run cost,a ship date",
       "typewriterPrefill": "evals",
-      "sloganCreates": "creates",
-      "sloganAds": "advertises",
-      "sloganSells": "sells",
-      "sloganManages": "manages",
-      "sloganTogether": "together",
       "ctaResults": "See what we ship with it",
       "ctaCall": "Book the audit",
       "commitment": "The 1,500 dollar audit is credited in full against the build it scopes. If the audit finds no build worth doing, we say so, and you keep the report.",
       "audience": "For founders and product teams putting an AI feature in front of real customers",
       "sub": "Entered through a fixed audit: 1,500 dollars, five business days, credited in full against the build. We quote the monthly run cost next to the build cost, because the build is a third of the bill.",
-      "signedBy": "Andrew Altair. I am the one who reads your data."
+      "signedBy": "aiNOW checks this process on your data, sets it up, and shows you the result."
     },
     "work": {
       "eyebrow": "How it works",
