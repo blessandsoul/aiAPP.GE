@@ -4,19 +4,27 @@
    Imported LAST in src/app/[locale]/layout.tsx (after globals.css and site-new.css), so these
    :root values win over the base tokens at equal specificity. Keep it last.
 
-   Two things here are COMPUTED, not chosen, because eyeballing them is how contrast bugs ship:
+   FIVE tokens here are DERIVED, not chosen, because eyeballing them is how contrast bugs ship,
+   and all five are tied to measured foreground/background pairs rather than taste:
 
-   --primary-foreground  the label colour, from the brand's WCAG relative luminance. A light
-                         brand fill (aiAPP's lime) needs near-black text or the label fails AA.
-   --brand-cta           the button fill: this brand, darkened only as far as the label needs to
-                         clear 4.5:1. --brand itself stays vivid for every other surface. */
+   --primary-foreground  whichever neutral label has the stronger measured contrast on the raw
+                         brand. Bright and mid-tone brands use near-black; dark brands use white.
+   --brand-cta           the vivid button fill. It stays equal to the brand whenever the chosen
+                         foreground clears AA, and only darkens as a final safety fallback.
+   --brand-ink           the brand as TEXT on the light page. It clears 4.5:1 so the same token
+                         remains safe in smaller labels and controls, not only the large headline.
+   --brand-display       the same hue for oversized hero text, darkened only enough to clear 3:1.
+   --ring                aliases brand-ink so keyboard focus stays visible on the light canvas.
+
+   --brand itself stays vivid, always. It is the fill: panels, rails, chips, gauges, dark
+   surfaces. The other three are what happens when it has to carry, or sit under, a letterform. */
 
 :root {
   --primary: #a3e635;
   --primary-foreground: #0a0a0a;
   --accent: #bef264;
   --accent-foreground: #0a0a0a;
-  --ring: #a3e635;
+  --ring: var(--brand-ink);
   --brand: #a3e635;
   --brand-soft: #ecfccb;
 
@@ -24,4 +32,11 @@
      on #a3e635 it is 13.13:1 */
   --brand-cta: #a3e635;
   --accent-cta: #bef264;
+
+  /* #a3e635 as text on #fbfbfc is 1.46:1 (normal text wants 4.5),
+     #52731a is 5.31:1 */
+  --brand-ink: #52731a;
+
+  /* Oversized display text needs 3:1, not the small-label reserve above. */
+  --brand-display: #6f9c24;
 }

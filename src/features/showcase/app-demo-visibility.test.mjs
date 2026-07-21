@@ -160,14 +160,13 @@ test('cleanup is idempotent and retained observer callbacks cannot restart a sto
   assert.equal(observer.snapshot().disconnectCount, 1);
 });
 
-test('all five product demos and the hero use the managed loop with Replay', () => {
+test('all five product demos use their managed loop with Replay', () => {
   for (const component of [
     'AppEval.tsx',
     'AppTraceReplay.tsx',
     'AppCost.tsx',
     'AppLadder.tsx',
     'AppSafeHandoff.tsx',
-    'HeroProof.tsx',
   ]) {
     const source = readFileSync(new URL(component, import.meta.url), 'utf8');
 
@@ -179,6 +178,27 @@ test('all five product demos and the hero use the managed loop with Replay', () 
     assert.match(source, /stop:/u, component);
     assert.match(source, /\.replay\(\)/u, component);
   }
+});
+
+test('hero adapter delegates lifecycle and Replay to the family workflow component', () => {
+  const adapter = readFileSync(new URL('HeroProof.tsx', import.meta.url), 'utf8');
+  const workflow = readFileSync(
+    new URL('../home/components/HeroWorkflowStory.tsx', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(adapter, /<HeroWorkflowStory/u);
+  assert.match(adapter, /mode="autonomous"/u);
+  assert.match(workflow, /import \{ createDemoLoop \} from '\.\/lib\/demo-loop\.mjs';/u);
+  assert.match(workflow, /createDemoLoop\(\{/u);
+  assert.match(workflow, /const CYCLE_MS = 6_400;/u);
+  assert.match(workflow, /threshold: 0\.35/u);
+  assert.match(workflow, /holdMs: 2_000/u);
+  assert.match(workflow, /showFinal,/u);
+  assert.match(workflow, /reset,/u);
+  assert.match(workflow, /stop,/u);
+  assert.match(workflow, /controllerRef\.current\?\.replay\(\)/u);
+  assert.match(workflow, /data-demo-replay="true"/u);
 });
 
 test('Cost and Ladder give control to the visitor until Replay', () => {

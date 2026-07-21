@@ -3,9 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion, useReducedMotion } from 'framer-motion';
+
 import { Ico } from '@/components/common/Ico';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { cn } from '@/lib/utils';
+
+import { AppDemoStory } from './AppDemoStory';
 import { createAppDemoLoop } from './app-demo-visibility.mjs';
 
 const RUNGS = ['r1', 'r2', 'r3'] as const;
@@ -42,7 +45,7 @@ export function AppLadder() {
     const play = () => {
       clear();
       setOpen('r1');
-      timers.current.push(setTimeout(() => setOpen('r2'), 3_000));
+      timers.current.push(setTimeout(() => setOpen('r2'), 700));
       timers.current.push(setTimeout(() => setOpen('r3'), CYCLE_MS));
     };
 
@@ -64,102 +67,121 @@ export function AppLadder() {
     };
   }, [clear, reduced]);
 
-  const selectRung = (rung: Rung) => {
-    loopRef.current?.takeControl();
-    setOpen(rung);
-  };
+  const activeIndex = RUNGS.indexOf(open);
   const replay = () => loopRef.current?.replay();
+  const showNext = () => {
+    loopRef.current?.takeControl();
+    setOpen(RUNGS[(activeIndex + 1) % RUNGS.length]);
+  };
 
   return (
-    <SectionContainer className="py-20 md:py-28">
-      <div ref={sectionRef}>
-        <div className="mb-9 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-3xl">
-            <span className="text-[12px] tracking-wide text-neutral-900/45">{t('eyebrow')}</span>
-            <h2 className="mt-4 text-balance font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-neutral-900 md:text-4xl">
-              {t('heading')}
-            </h2>
-            <p className="mt-3 text-pretty text-[15px] leading-relaxed text-[#525252]">{t('subtitle')}</p>
+    <SectionContainer
+      className="py-16 md:py-24 lg:py-28"
+      data-landing-demo="true"
+      data-demo-id="app-ladder"
+      data-demo-detail={open}
+      aria-live="off"
+    >
+      <AppDemoStory
+        eyebrow={t('eyebrow')}
+        title={t('heading')}
+        description={t('subtitle')}
+        resultLabel={t('businessResultLabel')}
+        result={t('businessResult')}
+        icon="solar:route-bold-duotone"
+        visualFirst
+      >
+        <div
+          ref={sectionRef}
+          aria-live="off"
+          className="min-h-[520px] overflow-hidden rounded-[28px] bg-[#F6F8F3] shadow-[0_0_0_1px_rgba(17,24,39,0.08)]"
+        >
+          <div className="flex min-h-[76px] items-center justify-between gap-4 border-b border-neutral-900/[0.08] bg-white px-4 py-3 md:px-6">
+            <span className="min-w-0">
+              <span className="block text-[11px] font-semibold text-[#667085]">{t('stageLabel')}</span>
+              <span className="mt-0.5 block text-[14px] font-extrabold text-[#111827]">
+                {activeIndex + 1} / {RUNGS.length}
+              </span>
+            </span>
+            <button
+              type="button"
+              onClick={replay}
+              data-demo-replay="app-ladder"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl bg-white px-3 text-[13px] font-semibold text-[#111827] shadow-[0_0_0_1px_rgba(17,24,39,0.12)] transition-transform duration-150 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-ink)] focus-visible:ring-offset-2"
+              aria-label={t('replay')}
+            >
+              <Ico name="solar:refresh-bold-duotone" className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('replay')}</span>
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={replay}
-            className="inline-flex min-h-11 w-fit shrink-0 items-center gap-2 rounded-full bg-[#fafafa] px-5 text-[13px] font-semibold text-neutral-900 shadow-[0_0_0_1px_rgba(0,0,0,0.09)] transition-transform active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2"
-          >
-            <Ico name="solar:refresh-bold-duotone" className="h-4 w-4" />
-            {t('replay')}
-          </button>
-        </div>
 
-        <ul className="flex min-w-0 flex-col gap-3">
-          {RUNGS.map((rung, index) => {
-            const active = rung === open;
-            const build = rung === 'r2';
+          <ol className="grid grid-cols-3 gap-2 px-4 pt-4 md:px-6" aria-label={t('heading')}>
+            {RUNGS.map((rung, index) => {
+              const reached = index <= activeIndex;
+              const active = rung === open;
 
-            return (
-              <li key={rung} className="min-w-0">
-                <button
-                  type="button"
-                  onClick={() => selectRung(rung)}
-                  aria-expanded={active}
-                  className={cn(
-                    'w-full min-w-0 rounded-2xl px-4 py-5 text-left transition-[transform,background-color,box-shadow] active:scale-[0.995] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2 md:px-7 md:py-6',
+              return (
+                <li key={rung} className="min-w-0">
+                  <span className={cn(
+                    'flex min-h-[58px] min-w-0 flex-col justify-center rounded-xl border px-2.5 py-2 text-center',
                     active
-                      ? 'bg-white shadow-[0_0_0_1px_var(--brand),0_18px_40px_-34px_rgba(0,0,0,0.45)]'
-                      : 'bg-[#fafafa] shadow-[0_0_0_1px_rgba(0,0,0,0.07)]',
-                  )}
-                >
-                  <span className="flex min-w-0 items-start gap-4">
-                    <span className={cn(
-                      'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl',
-                      active ? 'bg-neutral-900 text-[var(--brand)]' : 'bg-white text-neutral-900/45 shadow-[0_0_0_1px_rgba(0,0,0,0.08)]',
-                    )}>
-                      <Ico name={ICONS[rung]} className="h-5 w-5" />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
-                        <span className="font-display text-xl font-extrabold tracking-tight text-neutral-900 md:text-2xl">
-                          {index + 1}. {t(rung)}
-                        </span>
-                        <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-[13px] text-neutral-900/50">
-                          <span>{t(`${rung}time`)}</span>
-                          <strong className="text-[15px] text-neutral-900">{t(`${rung}price`)}</strong>
-                        </span>
-                      </span>
-
-                      {active && (
-                        <motion.span
-                          initial={false}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: reduced ? 0 : 0.25 }}
-                          className="mt-5 block"
-                        >
-                          <span className="block max-w-3xl text-[15px] leading-relaxed text-[#404040]">{t(`${rung}what`)}</span>
-                          <span className="mt-3 block max-w-3xl text-[14px] leading-relaxed text-[#525252]">{t(`${rung}risk`)}</span>
-
-                          {build && (
-                            <span className="mt-5 inline-flex min-h-11 flex-wrap items-center gap-x-3 gap-y-1 rounded-xl bg-[#f7f7f5] px-4 py-2.5 text-[13px] shadow-[0_0_0_1px_rgba(0,0,0,0.07)]">
-                              <Ico name="solar:wallet-bold-duotone" className="h-5 w-5 text-neutral-900" />
-                              <span className="text-neutral-900/55">{t('credit')}</span>
-                              <span className="font-bold text-neutral-900/35 line-through">1,500</span>
-                              <span className="rounded-full bg-[var(--brand)] px-3 py-1 font-bold text-[#111214]">{t('youPay')} 0</span>
-                            </span>
-                          )}
-                        </motion.span>
-                      )}
-                    </span>
+                      ? 'border-[var(--brand)] bg-white'
+                      : reached
+                        ? 'border-neutral-900/10 bg-white/80'
+                        : 'border-neutral-900/[0.07] bg-[#FAFBF8]',
+                  )}>
+                    <span className="text-[10px] font-extrabold text-[#667085]">0{index + 1}</span>
+                    <span className="mt-0.5 break-words text-[11px] font-bold leading-4 text-[#111827]">{t(rung)}</span>
                   </span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+                </li>
+              );
+            })}
+          </ol>
 
-        <p className="mt-6 flex items-start gap-2 text-[13px] font-semibold leading-relaxed text-neutral-900">
-          <Ico name="solar:check-circle-bold-duotone" className="mt-0.5 h-4 w-4 text-neutral-900" />
-          {t('note')}
-        </p>
-      </div>
+          <motion.div
+            key={open}
+            id="app-ladder-detail"
+            data-ladder-detail-slot="true"
+            initial={false}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: reduced ? 0 : 0.26, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-3 mt-3 min-h-[440px] rounded-2xl border border-neutral-900/[0.08] bg-white p-4 max-[359px]:min-h-[600px] md:mx-6 md:min-h-[310px] md:p-6"
+            aria-live="off"
+          >
+            <div className="flex min-w-0 items-start gap-3">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#111827] text-[var(--brand)]">
+                <Ico name={ICONS[open]} className="h-5 w-5" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-[22px] font-extrabold leading-7 tracking-tight text-[#111827]">{t(open)}</span>
+                <span className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[12px] font-semibold text-[#667085]">
+                  <span>{t(`${open}time`)}</span>
+                  <strong className="text-[#111827]">{t(`${open}price`)}</strong>
+                </span>
+              </span>
+            </div>
+
+            <p className="mt-5 text-[14px] leading-6 text-[#334155]">{t(`${open}what`)}</p>
+
+            <p className="mt-5 flex min-h-[64px] items-start gap-2 rounded-xl bg-[var(--brand-soft)] px-3 py-3 text-[12px] font-semibold leading-5 text-[#334155]">
+              <Ico name="solar:check-circle-bold-duotone" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-ink)]" />
+              {t(`${open}highlight`)}
+            </p>
+          </motion.div>
+
+          <div className="flex justify-end px-4 pb-4 pt-3 md:px-6 md:pb-6">
+            <button
+              type="button"
+              onClick={showNext}
+              aria-controls="app-ladder-detail"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#111827] px-4 text-[13px] font-bold text-white transition-transform duration-150 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-ink)] focus-visible:ring-offset-2"
+            >
+              {t('next')}
+              <Ico name="solar:arrow-right-bold-duotone" className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </AppDemoStory>
     </SectionContainer>
   );
 }

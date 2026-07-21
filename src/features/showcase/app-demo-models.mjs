@@ -114,10 +114,15 @@ export function createTimelinePlayer({
     onStage(stages[0]);
     if (stages.length === 1) return;
 
-    const intervalMs = durationMs / (stages.length - 1);
-    timers = stages.slice(1).map((stage, index) =>
-      schedule(() => onStage(stage), intervalMs * (index + 1)),
-    );
+    const transitionCount = stages.length - 1;
+    const firstChangeMs = Math.min(850, durationMs / transitionCount);
+    timers = stages.slice(1).map((stage, index) => {
+      const position = index + 1;
+      const delay = transitionCount === 1
+        ? firstChangeMs
+        : firstChangeMs + ((durationMs - firstChangeMs) * (position - 1)) / (transitionCount - 1);
+      return schedule(() => onStage(stage), delay);
+    });
   };
 
   return {

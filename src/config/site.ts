@@ -86,19 +86,19 @@ export const SITE = {
       "Evals as a deliverable: full trajectories tested, tool choice and outcome, not only the final answer",
       "Guardrails: prompt injection, PII leakage, hallucination, off-topic drift",
       "Tracing on every agent run",
-      "The monthly run cost quoted next to the build cost, because the build is only about a quarter to a third of the three-year total",
+      "The estimated monthly run cost quoted next to the build cost",
     ],
     boundary:
       "aiAPP builds. If what you have is an app that was already built with AI and it is now broken or leaking, that is a different job and it is at vibecoding.ge.",
     limits: [
-      "We have no case studies yet and we do not invent them. A page claiming 500 projects and 98% satisfaction is a page you should distrust.",
-      "We quote no accuracy figure before the eval set exists.",
-      "We do not offer a money-back guarantee. On an AI build it is a trap, because the client can always say the output is not good enough.",
-      "We hold no SOC2, ISO or GDPR certification and we do not claim one.",
-      "A Georgian small business is realistically not a buyer for this. AI adoption among small Georgian enterprises is about 2% and ERP adoption about 7%. This is sold to large and mid-size companies, and to clients abroad.",
+      "aiNOW does not use another project's accuracy, cost or conversion result as proof for a new build.",
+      "aiNOW quotes no accuracy figure before the evaluation set exists.",
+      "aiAPP has no general money-back guarantee. Commercial terms are written into the agreed project scope.",
+      "aiNOW claims no SOC2, ISO or GDPR certification for aiAPP.",
+      "The service fits businesses with a defined process, a responsible owner and enough data to test the result. The audit decides whether a build is justified.",
     ],
     commitment:
-      "The 1500 dollar audit is credited in full against the build it scopes. If the audit finds no build worth doing, we say so and you keep the report.",
+      "The 1500 dollar audit is credited in full against the build it scopes. If the audit finds no justified build, aiNOW delivers the report without proposing an implementation.",
     // A model asked "what does an AI agent build cost" cannot answer from a page that says
     // "contact us". This is the one price we publish, and it is the entry point, not the build.
     offer: {
@@ -109,7 +109,7 @@ export const SITE = {
         "Five business days. Ends in one agent scoped, priced and dated, with the monthly running cost quoted next to the build cost. Credited in full against the build it scopes.",
     },
     summary:
-      "aiAPP is the AI engineering arm of the aiNOW agency in Tbilisi, Georgia. It is entered through a fixed-fee audit: 1500 US dollars, five business days, credited in full against the build it scopes, ending in one agent that is scoped, priced and dated. What separates it from a general development shop is what it ships alongside the agent: evals that test full trajectories, guardrails against prompt injection and data leakage, tracing on every run, and the monthly running cost quoted next to the build cost, because the build is only about a quarter to a third of the three-year total. It has no case studies yet and says so.",
+      "aiAPP is aiNOW's AI engineering service for business applications and agents. A fixed-fee audit scopes one useful build, its delivery plan and estimated monthly running cost. The implementation includes tests, guardrails, tracing and a handover of code, access and documentation.",
   },
 } as const;
 
