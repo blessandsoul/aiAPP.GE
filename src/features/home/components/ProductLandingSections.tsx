@@ -72,9 +72,9 @@ const PRODUCT_LANDING_CONFIG = {
     resourceTitles: { ka: ['დოკუმენტების ავტომატიზაცია','როგორ დავნერგოთ AI უსაფრთხოდ','aiNOW-ის რეალური პროექტები'], en: ['Document workflow automation','How to introduce AI safely','Real projects by aiNOW'], ru: ['Автоматизация работы с документами','Как безопасно внедрить AI','Реальные проекты aiNOW'] },
   },
   aiapp: {
-    integrations: [['solar:global-bold-duotone','Web'],['solar:smartphone-bold-duotone','Mobile'],['solar:code-square-bold-duotone','API'],['solar:chart-2-bold-duotone','Analytics']],
+    integrations: [['solar:smartphone-bold-duotone','App Store'],['solar:play-circle-bold-duotone','Google Play'],['solar:calculator-bold-duotone','Payments'],['solar:letter-bold-duotone','Push notifications']],
     resources: ['/services/websites','/ai-biznesistvis','/projects'],
-    resourceTitles: { ka: ['ციფრული პროდუქტი ბიზნესისთვის','როგორ დავიწყოთ AI-პროდუქტი','aiNOW-ის რეალური პროექტები'], en: ['A digital product for a business','How to start an AI product','Real projects by aiNOW'], ru: ['Цифровой продукт для бизнеса','Как запустить AI-продукт','Реальные проекты aiNOW'] },
+    resourceTitles: { ka: ['მობილური აპი ბიზნესისთვის','როგორ დავგეგმოთ პირველი ვერსია','aiNOW-ის რეალური პროექტები'], en: ['A mobile app for a business','How to plan the first release','Real projects by aiNOW'], ru: ['Мобильное приложение для бизнеса','Как спланировать первую версию','Реальные проекты aiNOW'] },
   },
   vibecoding: {
     integrations: [['solar:global-bold-duotone','Public app'],['solar:code-square-bold-duotone','Source'],['solar:server-square-cloud-bold-duotone','API'],['solar:database-bold-duotone','Database']],

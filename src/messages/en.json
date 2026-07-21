@@ -2,7 +2,7 @@
   "seo": {
     "contact": {
       "title": "Contact aiAPP",
-      "description": "Book the AI Opportunity Audit: 1,500 dollars, five business days, credited in full against the build it scopes."
+      "description": "Contact aiNOW to turn your idea into a mobile application for iOS and Android."
     },
     "notFound": {
       "title": "404, page not found",
@@ -34,7 +34,7 @@
     "showcase": "See what ships",
     "process": "How it works",
     "faq": "Questions",
-    "cta": "Book an audit",
+    "cta": "Discuss an app",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "switchLanguage": "Switch language"
@@ -49,64 +49,64 @@
     "sectionShowcase": "See what ships",
     "sectionWork": "How it works",
     "sectionFaq": "Questions",
-    "ctaHuge": "Book the audit",
+    "ctaHuge": "Show us your app idea",
     "copyright": "© {year} aiAPP, an aiNOW product. All rights reserved."
   },
   "product": {
     "seo": {
-      "title": "aiAPP: business applications built and checked by aiNOW",
-      "description": "aiNOW builds a business application, tests realistic cases before launch, estimates monthly costs, and hands over the code, access, documents, and control."
+      "title": "aiAPP: mobile app builder for iOS and Android",
+      "description": "Describe your idea and aiNOW designs, builds, tests, and prepares your mobile application for the App Store and Google Play."
     },
     "hero": {
-      "lead": "A business application that ",
-      "taglinePrefix": "Software that",
-      "taglineWorks": "does the work",
-      "typewriterWords": "answers,checks,updates,approves,sends",
-      "typewriterPrefill": "answers",
-      "ctaResults": "See how it works",
-      "ctaCall": "Discuss the task",
-      "commitment": "aiNOW first maps one clear business task, shows the checks and monthly estimate, and only then proposes the build.",
-      "audience": "For businesses that need useful software, not a technical experiment",
-      "sub": "A customer asks. The application checks the request, performs the allowed action, and shows the result. Your employee remains in control where approval is needed.",
-      "signedBy": "aiNOW checks the application on your situations, sets it up, and hands over control."
+      "lead": "Turn your idea into a",
+      "taglinePrefix": "Mobile apps for",
+      "taglineWorks": "iOS and Android",
+      "typewriterWords": "marketplace,booking,delivery,fitness,loyalty",
+      "typewriterPrefill": "marketplace",
+      "ctaResults": "See an app take shape",
+      "ctaCall": "Discuss your app",
+      "commitment": "aiNOW defines the first useful version, screens, integrations, stages, and price before full development starts.",
+      "audience": "For businesses and founders who need a real mobile product, not another website",
+      "sub": "Describe the app in plain language. aiAPP turns the idea into screens and a working prototype, then builds and prepares the iOS and Android release.",
+      "signedBy": "aiNOW designs, builds, tests, publishes, and hands over the code and store access."
     },
     "work": {
       "eyebrow": "How it works",
       "headingPre": "Six clear steps.",
-      "headingAccent": "From one business task to an application your team can control.",
-      "s1Title": "Name the work",
-      "s1Tag": "one repeated task",
-      "s1Desc": "aiNOW identifies what starts the task, who approves it, and what result the customer or employee should receive.",
-      "s2Title": "Check the real process",
-      "s2Tag": "your data and rules",
-      "s2Desc": "aiNOW reviews the information, permissions, exceptions, and systems already used by the business.",
-      "s3Title": "Agree on scope and price",
-      "s3Tag": "before development",
-      "s3Desc": "The proposal states what the application will do, what stays manual, when it will be ready, and the expected monthly cost.",
-      "s4Title": "Build and check situations",
-      "s4Tag": "normal and difficult cases",
-      "s4Desc": "The application is checked on common requests, missing information, sensitive data, and cases that need a person.",
-      "s5Title": "Launch with human control",
-      "s5Tag": "approval where it matters",
-      "s5Desc": "Actions that need permission wait for an employee. Safe routine actions continue automatically.",
-      "s6Title": "Hand everything over",
-      "s6Tag": "code, access, documents, control",
-      "s6Desc": "Your team receives the application and the information needed to run it. Ongoing support remains optional."
+      "headingAccent": "From one idea to the App Store and Google Play.",
+      "s1Title": "Describe the app idea",
+      "s1Tag": "audience, problem and main action",
+      "s1Desc": "Tell aiNOW who will use the app and what the user must be able to do first.",
+      "s2Title": "Choose the first version",
+      "s2Tag": "only the features needed to launch",
+      "s2Desc": "aiNOW turns the idea into a clear list of screens, user journeys, integrations, stages, and price.",
+      "s3Title": "Review an interactive prototype",
+      "s3Tag": "tap through before development",
+      "s3Desc": "You see the real screen flow on a phone and approve the experience before the full build begins.",
+      "s4Title": "Build for iOS and Android",
+      "s4Tag": "one consistent mobile product",
+      "s4Desc": "aiAPP creates the mobile interface, business logic, admin tools, notifications, payments, and approved connections.",
+      "s5Title": "Test on real devices",
+      "s5Tag": "common phones and user journeys",
+      "s5Desc": "The team checks sign-up, permissions, weak networks, payments, notifications, and the main customer actions.",
+      "s6Title": "Publish and hand over",
+      "s6Tag": "stores, code, access and analytics",
+      "s6Desc": "aiNOW prepares the App Store and Google Play release and gives the business the code, accounts, documentation, and control."
     },
     "faq": {
       "headingPre": "Five questions",
-      "headingAccent": "before you order a business app.",
-      "subtitle": "What gets built, who uses it, and how it stays simple.",
+      "headingAccent": "before you build a mobile app.",
+      "subtitle": "What gets built for iOS and Android, how stores work, and what the business receives.",
       "q1": "What is <brand></brand>?",
-      "a1": "aiAPP is aiNOW's service for building business web apps: requests, statuses, tasks, payments, reports, and customer portals.",
-      "q2": "When is aiAPP better than a website?",
-      "a2": "aiAPP is useful when a customer or employee must do something: submit a request, check a status, approve a step, or receive a report.",
+      "a1": "aiAPP is aiNOW's mobile app builder for iOS and Android. It covers product definition, design, development, testing, store release, and handover.",
+      "q2": "When does a business need a mobile app instead of a website?",
+      "a2": "A mobile app is useful when customers return often, need push notifications, location, camera, loyalty, booking, delivery tracking, or a faster signed-in experience.",
       "q3": "Does the business need a developer?",
-      "a3": "No. aiNOW builds the logic, screens, and admin tools. You approve the process, copy, and rules your team will use.",
-      "q4": "Which systems can it connect to?",
-      "a4": "aiAPP can connect to Google Sheets, CRM, payments, email, and APIs. Each connection is checked for safety and business need first.",
+      "a3": "No. aiNOW designs and builds the app, admin tools, and integrations. You approve the audience, features, screens, business rules, and release.",
+      "q4": "Will the app work on both iPhone and Android?",
+      "a4": "Yes, when the agreed scope supports both platforms. aiNOW tests the main journeys on current phone sizes and prepares both store releases.",
       "q5": "What result does the business get?",
-      "a5": "The business gets one working tool where the process, status, and responsible person are visible.",
+      "a5": "The business receives the mobile app, source code, design assets, store access, admin access, analytics setup, and operating documentation defined in the project.",
       "q6": "What if the task is still unclear?",
       "a6": "The audit maps the task, the exceptions, the people involved, and the useful result before a build is proposed.",
       "q7": "Is the audit fee credited to the build?",
@@ -127,15 +127,15 @@
       "a14": "aiAPP builds a new application. vibecoding.ge checks and repairs an application that already exists."
     },
     "cta": {
-      "heading": "Start with one clear business task.",
-      "subtitle": "aiNOW maps the task, checks feasibility, estimates the monthly cost, and shows exactly what the client receives before development starts.",
+      "heading": "Tell aiNOW what your mobile app should do.",
+      "subtitle": "aiNOW will define the first useful iOS and Android version, screens, integrations, delivery stages, and price before development starts.",
       "phoneLabel": "Phone number",
-      "phoneSubmit": "Discuss the task",
+      "phoneSubmit": "Discuss the app",
       "phoneNote": "aiNOW uses the number only to respond to this request",
       "orWrite": "Or write:"
     },
     "wordmark": {
-      "line": "Useful work. Visible checks. Client control."
+      "line": "Your idea. A real app. iOS and Android."
     },
     "eval": {
       "eyebrow": "Question 1",
@@ -238,51 +238,51 @@
     },
     "capabilities": {
       "eyebrow": "Five practical capabilities",
-      "title": "Build one useful business application",
-      "intro": "aiAPP starts with one important task and expands only when the business needs more.",
+      "title": "Everything needed to launch a mobile application",
+      "intro": "From the first screen to store release, aiAPP keeps the product understandable and under business control.",
       "outcomeLabel": "Business result",
       "items": {
         "1": {
-          "title": "Test the key customer task",
-          "description": "Defines one customer request, the required action, and the correct answer first.",
-          "result": "The business sees whether the idea works before building more."
+        "title": "A clear first version",
+        "description": "Defines the audience, core action, screens, and features needed for the first useful release.",
+        "result": "The business avoids paying for features nobody needs yet."
         },
         "2": {
-          "title": "Safe action rules",
-          "description": "Sets who can see data, what the application may do, and when a person must step in.",
-          "result": "Routine work runs automatically while risky decisions stay with the team."
+        "title": "A real phone prototype",
+        "description": "Shows the navigation and important screens as an interactive prototype before full development.",
+        "result": "The business sees and corrects the experience early."
         },
         "3": {
-          "title": "Clear cost before building",
-          "description": "Fixes the scope and price of the first useful stage before development starts.",
-          "result": "The business knows what it will receive and what it will pay."
+        "title": "iOS and Android development",
+        "description": "Builds the approved interface, logic, accounts, notifications, payments, and integrations for both platforms.",
+        "result": "Customers get one consistent product on iPhone and Android."
         },
         "4": {
-          "title": "Build in stages",
-          "description": "Adds the next function only after the previous stage is working and needed.",
-          "result": "The application grows from real demand instead of unnecessary features."
+        "title": "Testing and store preparation",
+        "description": "Checks common devices and user journeys and prepares the App Store and Google Play listing materials.",
+        "result": "The application is ready for store review with fewer launch surprises."
         },
         "5": {
-          "title": "Business ownership",
-          "description": "Hands over the code, access, documentation, and operating instructions.",
-          "result": "The application and its operation remain under business control."
+        "title": "Business ownership",
+        "description": "Hands over the code, design files, store accounts, analytics, documentation, and operating access.",
+        "result": "The mobile product remains under business control."
         }
       }
     },
     "heroStory": {
       "badge": "Illustrative demo",
       "inputLabel": "Business request",
-      "input": "Let customers check their order status themselves.",
-      "bridgeLabel": "iAI understood",
-      "bridge": "It turns the request into safe rules, then sends the task to aiAPP.",
-      "productLabel": "aiAPP handles it",
-      "productAction": "It shows the customer the current order status.",
-      "detailOne": "Customer enters an order number",
-      "detailTwo": "Permission checked and status shown",
+    "input": "Build a salon booking app for iPhone and Android with reminders and online payment.",
+    "bridgeLabel": "The idea becomes a product brief",
+    "bridge": "aiAPP identifies the users, main journey, required screens, and first release.",
+    "productLabel": "aiAPP builds",
+    "productAction": "Creates a working mobile prototype for iOS and Android.",
+    "detailOne": "Home · services · calendar · payment · booking confirmation",
+    "detailTwo": "iPhone and Android preview ready to test",
       "resultLabel": "Ready",
-      "result": "The customer receives a verified answer.",
+    "result": "The first mobile app version is ready for review.",
       "businessLabel": "What the business gets",
-      "businessValue": "Customers get routine answers themselves, while risky actions stay with the team.",
+    "businessValue": "The business sees the real app before full development and knows exactly what will ship on iOS and Android.",
       "replay": "Replay"
     },
     "proof": {

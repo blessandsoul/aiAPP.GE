@@ -46,7 +46,7 @@ export const SITE = {
   manifest: {
     name: "aiAPP",
     short: "aiAPP",
-    description: "AI engineering: evals, guardrails, tracing, and a fixed-date agent build.",
+    description: "Build mobile applications for iOS and Android, from idea and prototype to store release.",
     background: "#fbfcfc",
     theme: "#a3e635",
   },
@@ -65,51 +65,42 @@ export const SITE = {
    */
   seo: {
     disambiguating:
-      "An AI engineering studio that ships one scoped agent with evals, guardrails, tracing and a quoted monthly run cost. It is not a generic offshore development shop and it does not sell an undefined category called AI applications.",
-    serviceType: "AI agent and application engineering, entered through a fixed-fee opportunity audit",
+      "A mobile app builder for businesses that need a real iOS and Android product, from idea and interactive prototype to tested release. It is not a website builder and it is not an internal automation product.",
+    serviceType: "iOS and Android mobile application design and development",
     audienceName:
-      "US and EU founders and product teams, plus Georgian enterprises: banks, insurers, telecoms, retail chains, logistics",
+      "Businesses and founders that need a customer or employee mobile application for iOS and Android",
     areaServed: "WORLD",
     knowsAbout: [
-      "AI agents",
-      "LLM evaluation",
-      "Retrieval augmented generation",
-      "Prompt injection",
-      "Guardrails",
-      "Observability",
-      "Token economics",
-      "AI application development",
+      "iOS app development",
+      "Android app development",
+      "Mobile application design",
+      "App Store publishing",
+      "Google Play publishing",
+      "Push notifications",
+      "Mobile payments",
+      "Mobile app analytics",
     ],
     features: [
-      "A fixed-fee AI Opportunity Audit: 1500 US dollars, 5 business days, credited in full against the build",
-      "One agent, scoped, priced, with a fixed ship date",
-      "Evals as a deliverable: full trajectories tested, tool choice and outcome, not only the final answer",
-      "Guardrails: prompt injection, PII leakage, hallucination, off-topic drift",
-      "Tracing on every agent run",
-      "The estimated monthly run cost quoted next to the build cost",
+      "A clear app brief with audience, core action and required screens",
+      "An interactive mobile prototype before full development",
+      "One codebase prepared for iOS and Android where appropriate",
+      "Testing on real phone sizes and common user journeys",
+      "App Store and Google Play release preparation",
+      "Handover of code, store access and operating documentation",
     ],
     boundary:
-      "aiAPP builds. If what you have is an app that was already built with AI and it is now broken or leaking, that is a different job and it is at vibecoding.ge.",
+      "aiAPP creates new mobile applications for iOS and Android. If an existing AI-built app is broken or leaking data, that repair and risk review belongs to vibecoding.ge. Websites belong to aiWEB.ge.",
     limits: [
       "aiNOW does not use another project's accuracy, cost or conversion result as proof for a new build.",
-      "aiNOW quotes no accuracy figure before the evaluation set exists.",
+      "Store approval is controlled by Apple and Google, so aiNOW cannot guarantee a review date or acceptance before their review.",
       "aiAPP has no general money-back guarantee. Commercial terms are written into the agreed project scope.",
-      "aiNOW claims no SOC2, ISO or GDPR certification for aiAPP.",
-      "The service fits businesses with a defined process, a responsible owner and enough data to test the result. The audit decides whether a build is justified.",
+      "Features that use payments, location, health, finance or personal data require an additional compliance and store-policy review.",
+      "The service fits businesses with a clear audience, a responsible product owner and one useful first version.",
     ],
     commitment:
-      "The 1500 dollar audit is credited in full against the build it scopes. If the audit finds no justified build, aiNOW delivers the report without proposing an implementation.",
-    // A model asked "what does an AI agent build cost" cannot answer from a page that says
-    // "contact us". This is the one price we publish, and it is the entry point, not the build.
-    offer: {
-      name: "AI readiness audit",
-      price: "1500",
-      currency: "USD",
-      description:
-        "Five business days. Ends in one agent scoped, priced and dated, with the monthly running cost quoted next to the build cost. Credited in full against the build it scopes.",
-    },
+      "Before development starts, aiNOW shows the agreed first version, screens, integrations, delivery stages and price in writing.",
     summary:
-      "aiAPP is aiNOW's AI engineering service for business applications and agents. A fixed-fee audit scopes one useful build, its delivery plan and estimated monthly running cost. The implementation includes tests, guardrails, tracing and a handover of code, access and documentation.",
+      "aiAPP creates mobile applications for iOS and Android. A business describes the idea, aiNOW defines the audience and first useful version, designs an interactive prototype, builds and tests the application, prepares the store release, and hands over the code and access.",
   },
 } as const;
 

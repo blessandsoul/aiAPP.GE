@@ -5,11 +5,11 @@ import { useTranslations } from 'next-intl';
 import { ProductCapabilities } from './ProductCapabilities';
 
 const ICONS = [
-  'solar:code-2-bold-duotone',
+  'solar:smartphone-bold-duotone',
+  'solar:document-text-bold-duotone',
+  'solar:code-square-bold-duotone',
+  'solar:play-circle-bold-duotone',
   'solar:shield-check-bold-duotone',
-  'solar:calculator-bold-duotone',
-  'solar:layers-minimalistic-bold-duotone',
-  'solar:key-bold-duotone',
 ] as const;
 
 export function LandingShowcase(): React.ReactElement {
