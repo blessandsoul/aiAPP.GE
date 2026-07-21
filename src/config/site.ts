@@ -22,10 +22,10 @@ export const SITE = {
   wordmark: { prefix: "ai", mark: "APP" },
 
   /** The product colour. src/app/brand.css is generated from this; keep them in step. */
-  brandHex: "#a3e635",
+  brandHex: "#8b5cf6",
 
   /** Three hexes the hero grainient shader interpolates: soft, brand, accent. */
-  shader: ["#ecfccb", "#a3e635", "#bef264"] as [string, string, string],
+  shader: ["#ede9fe", "#8b5cf6", "#c084fc"] as [string, string, string],
 
   /**
    * i18n.

@@ -186,12 +186,14 @@ test('the hero CTA uses the bundled icon and keeps audience copy in sentence cas
   assert.doesNotMatch(landingHeroSource, /hero-audience[^"\n]*\buppercase\b/u);
 });
 
-test('the static hero can shrink at 342px without clipping Georgian copy', () => {
+test('the rotating hero can shrink at 342px without clipping Georgian copy', () => {
   assert.match(landingHeroSource, /data-family-shell="true" className="hero-family-shell/u);
   assert.match(landingHeroSource, /className="grid min-w-0 gap-8/u);
   assert.match(landingHeroSource, /data-hero-primary="true"/u);
-  assert.match(landingHeroSource, /className="hero-static-accent"/u);
-  assert.doesNotMatch(landingHeroSource, /setInterval|setTimeout|caretW|availableWidth/u);
+  assert.match(landingHeroSource, /className="typewriter"/u);
+  assert.match(landingHeroSource, /data-demo-state="idle"/u);
+  assert.match(landingHeroSource, /IntersectionObserver/u);
+  assert.doesNotMatch(landingHeroSource, /setInterval|caretW|availableWidth/u);
   assert.match(landingHeroCss, /\.hero-family-shell\{width:min\(1140px,calc\(100% - 48px\)\)/u);
   assert.match(landingHeroCss, /@media\(max-width:640px\)[^{]*\{[^}]*#hero\{padding-top:96px;/u);
 });

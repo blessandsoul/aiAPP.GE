@@ -58,11 +58,13 @@
       "description": "Describe your idea and aiNOW designs, builds, tests, and prepares your mobile application for the App Store and Google Play."
     },
     "hero": {
-      "lead": "Turn your idea into a",
+      "owner": "Your",
+      "role": "mobile app developer",
+      "lead": "builds a mobile app for",
       "taglinePrefix": "Mobile apps for",
       "taglineWorks": "iOS and Android",
-      "typewriterWords": "marketplace,booking,delivery,fitness,loyalty",
-      "typewriterPrefill": "marketplace",
+      "typewriterWords": "shopping,booking,delivery,fitness,loyalty",
+      "typewriterPrefill": "shopping",
       "ctaResults": "See an app take shape",
       "ctaCall": "Discuss your app",
       "commitment": "aiNOW defines the first useful version, screens, integrations, stages, and price before full development starts.",
