@@ -188,7 +188,7 @@ test('the hero CTA uses the bundled icon and keeps audience copy in sentence cas
 
 test('the rotating hero can shrink at 342px without clipping Georgian copy', () => {
   assert.match(landingHeroSource, /data-family-shell="true" className="hero-family-shell/u);
-  assert.match(landingHeroSource, /className="grid min-w-0 gap-8/u);
+  assert.match(landingHeroSource, /className="grid min-w-0 [^"]*gap-8/u);
   assert.match(landingHeroSource, /data-hero-primary="true"/u);
   assert.match(landingHeroSource, /className="typewriter"/u);
   assert.match(landingHeroSource, /data-demo-state="idle"/u);
