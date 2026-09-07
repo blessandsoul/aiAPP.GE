@@ -31,7 +31,7 @@ export function FooterLanguageSwitcher() {
       {LOCALES.map((l) => (
         <li key={l.code}>
           <NextLink
-            href={localePath(l.code, pathname)}
+            href={localePath(l.code, pathname.startsWith('/blog') ? '/' : pathname)}
             aria-current={current === l.code ? 'true' : undefined}
             className={cn(
               'inline-flex min-h-11 min-w-11 items-center break-words transition-colors hover:text-neutral-900',

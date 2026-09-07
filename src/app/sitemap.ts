@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAvailableLocales, getDefaultAvailableLocale, getPost, getPostSlugs } from "@/features/blog/lib/blog";
+import { getAvailableLocales, getDefaultAvailableLocale, getPost, getPosts, getPostSlugs } from "@/features/blog/lib/blog";
 import { INDEXED_LOCALES, buildAlternates, localeUrl } from "@/i18n/seo-locales";
 import {
   PUBLIC_ROUTES,
@@ -8,14 +8,23 @@ import {
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
+  const blogLocales = INDEXED_LOCALES.filter((locale) => getPosts(locale).length > 0);
   for (const route of PUBLIC_ROUTES) {
+    if (route.path === "/privacy" || route.path === "/terms" || route.path === "/cookies") continue;
     const path = route.path === "/" ? "" : route.path;
-    for (const locale of INDEXED_LOCALES) {
+    const locales = route.path === "/blog" ? blogLocales : INDEXED_LOCALES;
+    const languages = route.path === "/blog"
+      ? Object.fromEntries([
+          ...blogLocales.map((candidate) => [candidate, localeUrl(candidate, path)]),
+          ...(blogLocales.length > 0 ? [["x-default", localeUrl(blogLocales.includes("ka") ? "ka" : blogLocales[0], path)]] : []),
+        ])
+      : null;
+    for (const locale of locales) {
       entries.push({
         url: localeUrl(locale, path),
         changeFrequency: route.changeFrequency,
         priority: route.priority,
-        alternates: { languages: buildAlternates(path, locale).languages },
+        alternates: { languages: languages ?? buildAlternates(path, locale).languages },
       });
     }
   }

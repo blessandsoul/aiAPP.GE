@@ -395,7 +395,7 @@ export function LandingNav() {
               {LOCALES.map((l) => (
                 <li key={l.code}>
                   <NextLink
-                    href={localePath(l.code, pathname)}
+                    href={localePath(l.code, pathname.startsWith('/blog') ? '/' : pathname)}
                     className={`nav-dd-link${l.code === locale ? ' is-current' : ''}`}
                     onClick={() => setLangOpen(false)}
                   >
