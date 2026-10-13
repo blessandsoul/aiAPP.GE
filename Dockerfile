@@ -12,12 +12,16 @@ FROM node:24-bookworm-slim AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN --network=host npm run build
+ENV LANDING_CLONE_PREVIEW=0
+ENV NEXT_PUBLIC_LANDING_CLONE_PREVIEW=0
+RUN --network=host npm run build -- --webpack
 
 # Stage 3: Production runner
 FROM node:24-bookworm-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+ENV LANDING_CLONE_PREVIEW=0
+ENV NEXT_PUBLIC_LANDING_CLONE_PREVIEW=0
 
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs

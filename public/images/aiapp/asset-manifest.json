@@ -1,0 +1,15 @@
+{
+  "schema": "aiapp.transparent-assets.v1",
+  "product": "aiAPP",
+  "sourceRevision": "094a05cf0b8a23acb33486961aad4b369d093d03",
+  "palette": ["#6366f1", "#818cf8", "#c7d2fe", "silver"],
+  "provenance": { "generator": "built-in image_gen", "transparent_background": true, "generatedAt": "2026-10-07", "referenceImagesPassed": [], "rightsReview": "No identities, official logos, real screenshots, store badges or provider claims; local fit and owner acceptance remain separate." },
+  "assets": [
+    { "file": "hero-app-workflow-v1.png", "sourceSlot": "AiNowEcosystemHub / hero workflow", "sha256": "9b87d6b4d95516d8329c122aa228360d204658ba3d5bf7c88d244c67beb7dbb5", "dimensions": [1536, 1024], "mode": "RGBA", "zeroAlphaFraction": 0.7227814992, "status": "GENERATED_INSTALLED_FIT_PENDING", "prompt": "Transparent glass mobile app workflow with idea, phone screens and approval; indigo and silver; no text, logos, people, store badges, installs, money or outcomes." },
+    { "file": "brief-app-idea-v1.png", "sourceSlot": "AiNowEcosystemHub / idea satellite", "sha256": "1aced4f03c2bf9b44527ec2bda43d9347eefbac970fe2f5f462bc0352bd26f28", "dimensions": [1211, 1299], "mode": "RGBA", "zeroAlphaFraction": 0.5054920605, "status": "GENERATED_INSTALLED_FIT_PENDING", "prompt": "Transparent glass phone and abstract app-idea card; no text, logos, people, screenshots, stores, installs, money or guarantees." },
+    { "file": "prototype-review-v1.png", "sourceSlot": "AiNowEcosystemHub / prototype satellite", "sha256": "ca55b653e9b199786c2a5f083c52a1cf5c089d4fd581a42d366847dd778f7c10", "dimensions": [1024, 1536], "mode": "RGBA", "zeroAlphaFraction": 0.4547793070, "status": "GENERATED_INSTALLED_FIT_PENDING", "prompt": "Transparent glass phone with linked abstract screens and approval marker; no text, logos, people, screenshots, stores, installs, money or outcomes." },
+    { "file": "app-testing-v1.png", "sourceSlot": "AiNowEcosystemHub / testing satellite", "sha256": "6582abd74c077ca2257b0b6518c3813ffcf6fcd0aa8a2e811056e1389e076655", "dimensions": [1208, 1302], "mode": "RGBA", "zeroAlphaFraction": 0.5379726554, "status": "GENERATED_INSTALLED_FIT_PENDING", "prompt": "Transparent glass phone with weak-connection, permissions and test markers; no text, logos, people, screenshots, stores, installs, money or guarantees." },
+    { "file": "handover-code-v1.png", "sourceSlot": "AiNowEcosystemHub / handover satellite", "sha256": "fc0cba614a9b181a22b5e9e572b917be0c5afb3a37a241a2f1dcecc50aad73b0", "dimensions": [1374, 1145], "mode": "RGBA", "zeroAlphaFraction": 0.5469867724, "status": "GENERATED_INSTALLED_FIT_PENDING", "prompt": "Transparent glass phone, code/document card and handover arrow with approval; no text, logos, people, screenshots, stores, installs, money or outcomes." }
+  ],
+  "qa": { "alpha": "All five files are RGBA with meaningful zero-alpha background pixels.", "fit": "Source frame, responsive crop, loading/error states and light/dark contrast remain pending rendered QA.", "publish": false, "ownerAcceptance": false }
+}

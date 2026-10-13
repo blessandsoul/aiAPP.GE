@@ -1,21 +1,30 @@
 import {
-  PRODUCT_MACHINE_FACTS,
-  machineJsonResponse,
-} from '@/features/product-pages/machine';
+  OWN_PRODUCT_DOMAIN,
+  PUBLIC_PRODUCT_CATALOG,
+  PUBLIC_FACTS,
+  TIKTOK_PRODUCT_ROADMAP,
+} from "@/lib/public-facts";
 
-export const dynamic = 'force-static';
+export const revalidate = 86400;
 
-export function GET() {
-  return machineJsonResponse({
-    product: PRODUCT_MACHINE_FACTS.name,
-    provider: PRODUCT_MACHINE_FACTS.provider,
-    integrations: PRODUCT_MACHINE_FACTS.integrations,
-    statusDefinitions: {
-      available: 'Available now.',
-      customSetup: 'Available now after product-specific configuration.',
-      planned: 'Not currently available. No launch date is promised.',
+export function GET(): Response {
+  return Response.json(
+    {
+      name: PUBLIC_PRODUCT_CATALOG[0]?.name ?? PUBLIC_FACTS.brand.name,
+      url: OWN_PRODUCT_DOMAIN,
+      platform: "TikTok",
+      status: "planned",
+      availableNow: false,
+      launchDate: null,
+      limitation:
+        "No live TikTok API connection is currently available. Launch depends on TikTok approval, approved scopes, account eligibility and regional availability.",
+      products: TIKTOK_PRODUCT_ROADMAP.filter((item) => item.domain === OWN_PRODUCT_DOMAIN),
+      lastUpdated: PUBLIC_FACTS.lastUpdated,
     },
-    reviewedOn: PRODUCT_MACHINE_FACTS.reviewedOn,
-  });
+    {
+      headers: {
+        "Cache-Control": "public, max-age=86400, stale-while-revalidate=3600",
+      },
+    },
+  );
 }
-

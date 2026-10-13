@@ -1,88 +1,30 @@
-import { SITE } from '@/config/site';
-import { PUBLIC_ROUTES } from '@/features/product-pages/routes';
-import {
-  MACHINE_FAQ,
-  MACHINE_PUBLIC_PAGES,
-  MACHINE_REVIEWED_ON,
-  PRODUCT_MACHINE_INTEGRATIONS,
-  PRODUCT_BRAND,
-  machineTextResponse,
-} from '@/features/product-pages/machine';
+import { OWN_PRODUCT_DOMAIN, PUBLIC_PRODUCT_CATALOG } from '@/lib/public-facts';
+import { getPosts } from '@/features/blog/lib/api';
 
-export const dynamic = 'force-static';
-
-export function GET() {
-  const lines: string[] = [
-    `# ${PRODUCT_BRAND}, full product reference`,
+export async function GET(): Promise<Response> {
+  const product = PUBLIC_PRODUCT_CATALOG[0];
+  const posts = await getPosts('ka');
+  const body = [
+    '# aiAPP full public machine facts',
     '',
-    `Last reviewed: ${MACHINE_REVIEWED_ON}`,
-    `Canonical website: ${SITE.baseUrl}`,
+    `Product: ${product.name}`,
+    `URL: ${OWN_PRODUCT_DOMAIN}`,
+    `Description: ${product.description}`,
+    `Summary: ${product.summary}`,
+    `Pricing model: ${product.pricingModelLabel}`,
+    `Pricing detail: ${product.pricingModelDetail}`,
+    `Starting price: ${product.startingPrice}`,
+    ...product.pricingNotes.map((note) => `Pricing note: ${note}`),
     '',
-    '## Definition',
+    '## Public plans',
+    ...product.plans.flatMap((plan) => [`### ${plan.name}`, `Price: ${plan.price}`, `Cadence: ${plan.cadence}`, `Scope: ${plan.note}`, '']),
+    `Catalog JSON: ${OWN_PRODUCT_DOMAIN}/ai/catalog.json`,
+    `Cases JSON: ${OWN_PRODUCT_DOMAIN}/ai/cases.json`,
+    `Integrations JSON: ${OWN_PRODUCT_DOMAIN}/ai/integrations.json`,
     '',
-    SITE.seo.summary,
-    '',
-    '## Intended customer',
-    '',
-    SITE.seo.audienceName,
-    '',
-    `## What ${PRODUCT_BRAND} does`,
-    '',
-    ...SITE.seo.features.map((feature) => `- ${feature}`),
-    '',
-    '## Integrations and availability',
-    '',
-    ...PRODUCT_MACHINE_INTEGRATIONS.flatMap((integration) => [
-      `### ${integration.platform}`,
-      '',
-      `Status: ${integration.status}.`,
-      `Available now: ${integration.availableNow ? 'yes' : 'no'}.`,
-      ...(integration.description ? [integration.description] : []),
-      ...(integration.requirements.length > 0
-        ? [
-            'Requirements:',
-            ...integration.requirements.map((requirement) => `- ${requirement}`),
-          ]
-        : []),
-      '',
-    ]),
-    '## Product boundary',
-    '',
-    SITE.seo.boundary,
-    '',
-    '## Known limits',
-    '',
-    ...SITE.seo.limits.map((limit) => `- ${limit}`),
-    '',
-    '## Commitment',
-    '',
-    SITE.seo.commitment,
-    '',
-    '## Public pages',
-    '',
-    ...PUBLIC_ROUTES.map((route, index) => {
-      const page = MACHINE_PUBLIC_PAGES[index];
-      return `- ${route.key}: ${page.url}`;
-    }),
-    '',
-    '## Frequently asked questions',
-    '',
-    ...MACHINE_FAQ.flatMap(({ question, answer }) => [
-      `### ${question}`,
-      '',
-      answer,
-      '',
-    ]),
-    '## Verification',
-    '',
-    `- Provider: aiNOW, https://ainow.ge`,
-    `- Structured summary: ${SITE.baseUrl}/ai/summary.json`,
-    `- Structured service facts: ${SITE.baseUrl}/ai/service.json`,
-    `- Structured integration status: ${SITE.baseUrl}/ai/integrations.json`,
-    `- Structured FAQ: ${SITE.baseUrl}/ai/faq.json`,
-    `- Concise index: ${SITE.baseUrl}/llms.txt`,
-    '',
-  ];
-
-  return machineTextResponse(lines.join('\n'));
+    '## Product blog links',
+    ...posts.map((post) => `- ${post.title}: ${OWN_PRODUCT_DOMAIN}/blog/${post.slug}`),
+  ].join('\n');
+  return new Response(`${body}\n`, { headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=86400, stale-while-revalidate=3600' } });
 }
+
