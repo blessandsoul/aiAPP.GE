@@ -81,6 +81,7 @@ const BotIcon = () => (
 
 export const ChatDemo = () => {
     const t = useTranslations('chatDemo');
+    const ownerReferenceOnly = true;
     const [selectedPersona, setSelectedPersona] = useState<PersonaKey | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
@@ -134,6 +135,7 @@ export const ChatDemo = () => {
     };
 
     const sendMessage = async () => {
+        if (ownerReferenceOnly) return;
         const trimmed = input.trim();
         if (!trimmed || isLoading || !selectedPersona) return;
         if (msgCount >= 20) return;
@@ -389,11 +391,12 @@ export const ChatDemo = () => {
                                                 value={input}
                                                 onChange={(e) => setInput(e.target.value)}
                                                 onKeyDown={handleKeyDown}
+                                                readOnly={ownerReferenceOnly}
                                                 placeholder={t('inputPlaceholder')}
                                                 aria-label={t('inputPlaceholder')}
                                                 data-mcp-toolname="chat-demo-input"
                                                 data-mcp-tooldescription="Type a message to chat with the selected AI persona"
-                                                className="dodo-glass-inset flex-1 px-4 py-2.5 text-sm outline-none transition-colors duration-200 placeholder:text-slate-500/70 dark:placeholder:text-slate-400/70 focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/20"
+                                                className="dodo-glass-inset flex-1 px-4 py-2.5 text-sm outline-none transition-colors duration-200 placeholder:text-slate-500/70 dark:placeholder:text-slate-400/70 focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/20 read-only:cursor-not-allowed read-only:opacity-60"
                                             />
                                             <button
                                                 aria-label={t('send') || 'Send message'}
@@ -409,7 +412,7 @@ export const ChatDemo = () => {
                                                     sendMessage();
                                                     inputRef.current?.focus();
                                                 }}
-                                                disabled={isLoading || !input.trim()}
+                                                disabled={ownerReferenceOnly || isLoading || !input.trim()}
                                                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md shadow-blue-600/20 transition duration-200 hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95 disabled:opacity-40 disabled:shadow-none"
                                             >
                                                 <svg
@@ -422,6 +425,11 @@ export const ChatDemo = () => {
                                                 </svg>
                                             </button>
                                         </div>
+                                    )}
+                                    {ownerReferenceOnly && (
+                                        <p role="status" data-owner-reference="true" className="mt-2 text-center text-xs text-muted-foreground">
+                                            Owner-reference only — this demo does not send messages in this product release.
+                                        </p>
                                     )}
                                 </div>
                             </div>

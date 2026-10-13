@@ -77,33 +77,7 @@ const TOOLS: WebMcpTool[] = [
     },
     async execute(args): Promise<WebMcpToolResult> {
       if (isLandingCloneClientPreview()) return text("Callback requests are disabled in this preview.");
-      const phone = typeof args.phone === "string" ? args.phone.trim() : "";
-      if (phone.length < 6) return text("A valid phone number is required to discuss an aiAPP mobile app.");
-      const failure = () => text("Could not submit the aiAPP request right now. Please try https://aiapp.ge/contact");
-      if (phone.length > 20 || !/^[+\d\s()-]+$/.test(phone)) return failure();
-      const name = typeof args.name === "string" ? args.name.trim() : "";
-      if (name.length > 120) return failure();
-      const message = [
-        "Source: webmcp",
-        typeof args.projectType === "string" ? `Project type: ${args.projectType}` : "",
-        typeof args.message === "string" ? args.message.trim() : "",
-      ].filter(Boolean).join("\n");
-      if (message.length > 5000) return failure();
-      const body: Record<string, string> = { phone, message };
-      if (name) body.name = name;
-      try {
-        const res = await fetch("/api/contact", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify(body),
-        });
-        if (!res.ok) return failure();
-        const receipt: unknown = await res.json();
-        if (!receipt || typeof receipt !== "object" || Array.isArray(receipt) || (receipt as { success?: unknown }).success !== true) return failure();
-        return text("Lead received. The aiAPP team will review the mobile-app scope and reply with the next scoped step.");
-      } catch {
-        return failure();
-      }
+      return text("Browser-agent requests do not submit data. Please use the visible aiAPP contact form to complete the security check.");
     },
   },
 ];

@@ -36,6 +36,8 @@ const errClass = "mt-1.5 text-xs text-rose-600 dark:text-rose-300";
 export const PartnerApplicationForm = () => {
   const t = useTranslations("partners");
   const previewDisabled = isLandingCloneClientPreview();
+  const ownerReferenceOnly = true;
+  const submissionDisabled = previewDisabled || ownerReferenceOnly;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -50,7 +52,7 @@ export const PartnerApplicationForm = () => {
   });
 
   const onSubmit = async (data: PartnerApplicationData) => {
-    if (previewDisabled) return;
+    if (submissionDisabled) return;
     setIsSubmitting(true);
     try {
       const res = await fetch("/api/partners", {
@@ -209,20 +211,20 @@ export const PartnerApplicationForm = () => {
         </div>
         <button
           type="submit"
-          disabled={previewDisabled || isSubmitting}
+          disabled={submissionDisabled || isSubmitting}
           data-mcp-toolname="partner-submit"
           data-mcp-tooldescription="Submit aiNOW partner program application"
           className="ainow-btn-primary h-12 w-full text-base disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? t("form.submitting") : t("form.submit")}
         </button>
-        {previewDisabled && (
+        {submissionDisabled && (
           <p
             role="status"
-            data-preview-disabled="true"
+            data-owner-reference="true"
             className="text-center text-xs text-slate-500 dark:text-slate-400"
           >
-            Preview only — partner applications are disabled; no data will be sent.
+            Owner-reference only — partner applications are disabled; no data will be sent.
           </p>
         )}
       </form>

@@ -35,6 +35,8 @@ const errClass = "mt-1.5 text-xs text-rose-600 dark:text-rose-300";
 export const LeadRegistrationForm = () => {
   const t = useTranslations("partnersKit");
   const previewDisabled = isLandingCloneClientPreview();
+  const ownerReferenceOnly = true;
+  const submissionDisabled = previewDisabled || ownerReferenceOnly;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -49,7 +51,7 @@ export const LeadRegistrationForm = () => {
   });
 
   const onSubmit = async (data: PartnerLeadData) => {
-    if (previewDisabled) return;
+    if (submissionDisabled) return;
     setIsSubmitting(true);
     try {
       const res = await fetch("/api/partners/leads", {
@@ -200,20 +202,20 @@ export const LeadRegistrationForm = () => {
 
         <button
           type="submit"
-          disabled={previewDisabled || isSubmitting}
+          disabled={submissionDisabled || isSubmitting}
           data-mcp-toolname="partner-lead-submit"
           data-mcp-tooldescription="Register a client lead for the aiNOW partner program"
           className="ainow-btn-primary h-12 w-full text-base disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? t("leadForm.submitting") : t("leadForm.submit")}
         </button>
-        {previewDisabled && (
+        {submissionDisabled && (
           <p
             role="status"
-            data-preview-disabled="true"
+            data-owner-reference="true"
             className="text-center text-xs text-slate-500 dark:text-slate-400"
           >
-            Preview only — lead registration is disabled; no data will be sent.
+            Owner-reference only — lead registration is disabled; no data will be sent.
           </p>
         )}
       </form>
