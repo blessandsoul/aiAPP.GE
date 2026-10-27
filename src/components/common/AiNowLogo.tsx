@@ -105,7 +105,7 @@ export function AiNowLogo({
       <div className={`ainow-logo-wordmark flex items-center font-black tracking-tight leading-none ${textSizes[size]} ${wordmarkClassName}`}>
         <span className={wordmarkClassName ? "font-semibold opacity-90 text-inherit" : "font-semibold"} style={wordmarkClassName ? undefined : { ...AI_WORDMARK_STYLE, ...wordmarkStyle }}>ai</span>
         <span className={wordmarkClassName ? "font-black text-inherit" : "font-black"} style={wordmarkClassName ? undefined : { ...NOW_WORDMARK_STYLE, ...suffixWordmarkStyle }}>{productName === "aiNOW" ? "NOW" : productName.replace(/^ai/u, "")}</span>
-        {byline ? <span className="text-[0.42em] font-semibold tracking-[0.08em] text-slate-500 dark:text-slate-400">{byline}</span> : null}
+        {byline ? <span className="ml-2 text-[0.42em] font-semibold tracking-[0.08em] text-slate-500 dark:text-slate-400">{byline}</span> : null}
         {!wordmarkClassName && <span className="ainow-logo-light-pass" aria-hidden="true" />}
       </div>
     </div>
